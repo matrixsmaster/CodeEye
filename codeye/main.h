@@ -21,7 +21,7 @@
 typedef TfrmEdit *PEditor;
 struct CEOCacheEntry {
     const char* line;
-    int len;
+    int len, idx;
 };
 struct CEOCacheLine {
     //int id;
