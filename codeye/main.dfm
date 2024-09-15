@@ -51,7 +51,7 @@ object Form1: TForm1
     Height = 185
     FileList = selFile
     ItemHeight = 16
-    TabOrder = 0
+    TabOrder = 1
   end
   object selFile: TFileListBox
     Left = 216
@@ -59,7 +59,7 @@ object Form1: TForm1
     Width = 289
     Height = 217
     ItemHeight = 13
-    TabOrder = 1
+    TabOrder = 2
     OnChange = selFileChange
     OnDblClick = selFileDblClick
   end
@@ -68,7 +68,7 @@ object Form1: TForm1
     Top = 240
     Width = 217
     Height = 21
-    TabOrder = 2
+    TabOrder = 3
   end
   object BitBtn1: TBitBtn
     Left = 304
@@ -76,7 +76,7 @@ object Form1: TForm1
     Width = 201
     Height = 49
     Caption = 'Mix!'
-    TabOrder = 3
+    TabOrder = 5
     OnClick = BitBtn1Click
     Kind = bkAll
   end
@@ -93,7 +93,7 @@ object Form1: TForm1
     Top = 8
     Width = 145
     Height = 19
-    TabOrder = 5
+    TabOrder = 0
     OnChange = DriveComboBox1Change
   end
   object MainMenu1: TMainMenu
@@ -103,12 +103,15 @@ object Form1: TForm1
       Caption = 'File'
       object Openmixfile1: TMenuItem
         Caption = 'Open mix file'
+        ShortCut = 114
+        OnClick = Openmixfile1Click
       end
       object N1: TMenuItem
         Caption = '-'
       end
       object Exit1: TMenuItem
         Caption = 'Exit'
+        ShortCut = 16465
         OnClick = Exit1Click
       end
     end
@@ -122,6 +125,7 @@ object Form1: TForm1
       Caption = 'Window'
       object Closeall1: TMenuItem
         Caption = 'Close all'
+        ShortCut = 122
         OnClick = Closeall1Click
       end
     end
@@ -131,8 +135,12 @@ object Form1: TForm1
         Caption = 'Launch args'
         OnClick = Launchparams1Click
       end
+      object N2: TMenuItem
+        Caption = '-'
+      end
       object About1: TMenuItem
         Caption = 'About'
+        ShortCut = 112
         OnClick = About1Click
       end
     end
@@ -141,7 +149,15 @@ object Form1: TForm1
     DefaultExt = 'txt'
     Filter = 'Text files|*.txt|All files|*.*'
     Options = [ofEnableSizing]
+    Title = 'Save MixProject file'
     Left = 336
+    Top = 152
+  end
+  object od1: TOpenDialog
+    DefaultExt = 'txt'
+    Filter = 'Text files|*.txt|All files|*.*'
+    Title = 'Open MixProject file'
+    Left = 376
     Top = 152
   end
 end

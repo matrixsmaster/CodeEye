@@ -17,6 +17,8 @@
 #define MIXPROJ_PREFIX "MixProj_"
 #define MIXPROJ_SUFFIX ".txt"
 #define MIXPROJ_HEADER "MSM's Code Eye Project Mix File"
+#define SPLITTER_LEN 65
+#define CHAPTERSPLIT_LEN 80
 //---------------------------------------------------------------------------
 typedef TfrmEdit *PEditor;
 struct CEOCacheEntry {
@@ -53,6 +55,8 @@ __published:	// IDE-managed Components
     TMenuItem *Edit2;
     TMenuItem *Disclaimer1;
     TProgressBar *pbar1;
+    TOpenDialog *od1;
+    TMenuItem *N2;
 	void __fastcall Exit1Click(TObject *Sender);
 	void __fastcall About1Click(TObject *Sender);
 	void __fastcall selFileChange(TObject *Sender);
@@ -64,6 +68,7 @@ __published:	// IDE-managed Components
     void __fastcall BitBtn1Click(TObject *Sender);
     void __fastcall Launchparams1Click(TObject *Sender);
     void __fastcall DriveComboBox1Change(TObject *Sender);
+    void __fastcall Openmixfile1Click(TObject *Sender);
 private:	// User declarations
 	AnsiString curFile;
 	AnsiString dPath;

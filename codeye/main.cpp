@@ -127,7 +127,7 @@ void __fastcall TForm1::Generator(AnsiString prjDir, AnsiString prjName, AnsiStr
 	TStrings* projf = new TStringList();
 	TStrings* tmp = new TStringList();
 	AnsiString splitter;
-	splitter = splitter.StringOfChar('-',65);
+	splitter = splitter.StringOfChar('-',SPLITTER_LEN);
 
     // add global header
 	main->Append(DateToStr(Date())+'@'+TimeToStr(Time()));
@@ -196,7 +196,7 @@ void __fastcall TForm1::Generator(AnsiString prjDir, AnsiString prjName, AnsiStr
 	main->Append("");
 
     // add Appendix 1 (form data)
-	main->Append(splitter.StringOfChar('*',80));
+	main->Append(splitter.StringOfChar('*',CHAPTERSPLIT_LEN));
 	main->Append("Appendix 1. Borland Form Files Data");
 	main->Append(splitter);
     main->AddStrings(forms);
@@ -204,7 +204,7 @@ void __fastcall TForm1::Generator(AnsiString prjDir, AnsiString prjName, AnsiStr
 	main->Append("");
 
     // add Appendix 2 (project files)
-	main->Append(splitter.StringOfChar('*',80));
+	main->Append(splitter.StringOfChar('*',CHAPTERSPLIT_LEN));
 	main->Append("Appendix 2. Other Project Files");
 	main->Append(splitter);
 	main->AddStrings(projf);
@@ -256,7 +256,7 @@ void __fastcall TForm1::FormActivate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TForm1::Launchparams1Click(TObject *Sender)
 {
-    //ShowMessage(
+    ShowMessage(ParamStr(0)+" [work_dir] [result_fn] [\"close\"]");
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::ObfuscatePrepare()
@@ -290,32 +290,26 @@ void __fastcall TForm1::Obfuscate(TStrings* body, int tid)
 
     for (int i = 0; i < body->Count; i++) {
         AnsiString str = body->Strings[i];
-        AnsiString tst;
         for (int j = 1; j <= str.Length(); j++) {
             int l = cache[fid].tab[str[j]].len;
             if (!l) continue;
 
-            //int r = ((rand() % l) + (int)(str[j])) % l;
-            //str[j] = cache[fid].tab[str[j]].line[r];
-
-            int r = rand() % l;
-            int r2 = r + cache[fid].tab[str[j]].idx;
-            if (r2 >= l) r2 -= l;
-
-            char nc = cache[fid].tab[str[j]].line[r2];
-            int d = strchr(cache[fid].tab[str[j]].line,nc) - cache[fid].tab[str[j]].line;
-            d -= r;
-            if (d < 0) d += l;
-            tst += cache[fid].tab[str[j]].line[d];
-
-            str[j] = nc;
+            int r = (rand() % l) + cache[fid].tab[str[j]].idx;
+            if (r >= l) r -= l;
+            str[j] = cache[fid].tab[str[j]].line[r];
         }
-        body->Strings[i] = str + tst;
+        body->Strings[i] = str;
     }
 }
 //---------------------------------------------------------------------------
 int __fastcall TForm1::LineCounter(TStrings* body)
 {
     return 0;
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::Openmixfile1Click(TObject *Sender)
+{
+    if (!od1->Execute() || od1->FileName.IsEmpty()) return;
+    OpenWindow(od1->FileName);
 }
 //---------------------------------------------------------------------------

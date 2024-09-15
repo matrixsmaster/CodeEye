@@ -1,6 +1,6 @@
 object frmEdit: TfrmEdit
-  Left = 192
-  Top = 114
+  Left = 361
+  Top = 110
   Width = 508
   Height = 351
   Caption = 'view'
@@ -23,32 +23,41 @@ object frmEdit: TfrmEdit
     Height = 297
     Align = alClient
     Color = clSilver
-    Font.Charset = RUSSIAN_CHARSET
+    Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -13
     Font.Name = 'Courier'
     Font.Style = []
     ParentFont = False
-    ReadOnly = True
     ScrollBars = ssBoth
     TabOrder = 0
   end
   object mMenu0: TMainMenu
-    Left = 80
-    Top = 120
+    Left = 8
+    Top = 16
     object File1: TMenuItem
       Caption = 'File'
-      object Open1: TMenuItem
-        Caption = 'Open'
+      object Explode1: TMenuItem
+        Caption = 'Explode'
+        ShortCut = 116
+        OnClick = Explode1Click
+      end
+      object N1: TMenuItem
+        Caption = '-'
       end
       object Resave1: TMenuItem
         Caption = 'Resave'
+        ShortCut = 16467
       end
       object Saveas1: TMenuItem
         Caption = 'Save as...'
       end
+      object N2: TMenuItem
+        Caption = '-'
+      end
       object Close1: TMenuItem
         Caption = 'Close'
+        ShortCut = 16465
         OnClick = Close1Click
       end
     end
@@ -56,6 +65,10 @@ object frmEdit: TfrmEdit
       Caption = 'Edit'
       object Deobfuscate1: TMenuItem
         Caption = 'Deobfuscate'
+        ShortCut = 115
+      end
+      object N3: TMenuItem
+        Caption = '-'
       end
       object SelectAll1: TMenuItem
         Caption = 'Select All'
@@ -87,12 +100,12 @@ object frmEdit: TfrmEdit
     Font.Style = []
     MinFontSize = 0
     MaxFontSize = 0
-    Left = 200
-    Top = 64
+    Left = 48
+    Top = 16
   end
   object cd0: TColorDialog
     Ctl3D = True
-    Left = 232
-    Top = 64
+    Left = 88
+    Top = 16
   end
 end

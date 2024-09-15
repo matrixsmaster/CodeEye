@@ -6,6 +6,7 @@
 USEFORM("main.cpp", Form1);
 USEFORM("u_editor.cpp", frmEdit);
 USEFORM("u_about.cpp", AboutBox);
+USEFORM("u_seldest.cpp", frmSelDest);
 //---------------------------------------------------------------------------
 WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -14,8 +15,9 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		Application->Initialize();
 		Application->Title = "Code Eye";
 		Application->CreateForm(__classid(TForm1), &Form1);
-		Application->CreateForm(__classid(TAboutBox), &AboutBox);
-		Application->Run();
+         Application->CreateForm(__classid(TAboutBox), &AboutBox);
+         Application->CreateForm(__classid(TfrmSelDest), &frmSelDest);
+         Application->Run();
 	}
 	catch (Exception &exception)
 	{

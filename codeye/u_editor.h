@@ -25,17 +25,22 @@ __published:	// IDE-managed Components
 	TMenuItem *Edit1;
 	TMenuItem *SelectAll1;
 	TMenuItem *Copy1;
-    TMenuItem *Open1;
     TMenuItem *Resave1;
     TMenuItem *Saveas1;
     TMenuItem *Deobfuscate1;
+    TMenuItem *Explode1;
+    TMenuItem *N1;
+    TMenuItem *N2;
+    TMenuItem *N3;
 	void __fastcall Font1Click(TObject *Sender);
 	void __fastcall Background1Click(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall Close1Click(TObject *Sender);
 	void __fastcall SelectAll1Click(TObject *Sender);
 	void __fastcall Copy1Click(TObject *Sender);
+    void __fastcall Explode1Click(TObject *Sender);
 private:	// User declarations
+    void __fastcall Explode(AnsiString dir);
 public:		// User declarations
 	AnsiString fileForOpen;
 	__fastcall TfrmEdit(TComponent* Owner);
