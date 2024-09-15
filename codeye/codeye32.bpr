@@ -4,12 +4,13 @@
   <MACROS>
     <VERSION value="BCB.06.00"/>
     <PROJECT value="codeye32.exe"/>
-    <OBJFILES value="codeye32.obj main.obj u_editor.obj u_about.obj u_seldest.obj"/>
+    <OBJFILES value="codeye32.obj main.obj u_editor.obj u_about.obj u_seldest.obj 
+      u_progress.obj lcrng.obj"/>
     <RESFILES value="codeye32.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
     <DEFFILE value=""/>
-    <RESDEPEN value="$(RESFILES) main.dfm u_editor.dfm u_about.dfm u_seldest.dfm"/>
+    <RESDEPEN value="$(RESFILES) main.dfm u_editor.dfm u_about.dfm u_seldest.dfm u_progress.dfm"/>
     <LIBFILES value=""/>
     <LIBRARIES value=""/>
     <SPARELIBS value="vcl.lib rtl.lib vclx.lib bcbsmp.lib"/>
@@ -55,6 +56,8 @@
       <FILE FILENAME="u_editor.cpp" FORMNAME="frmEdit" UNITNAME="u_editor" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="u_about.cpp" FORMNAME="AboutBox" UNITNAME="u_about" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="u_seldest.cpp" FORMNAME="frmSelDest" UNITNAME="u_seldest" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="u_progress.cpp" FORMNAME="frmProgress" UNITNAME="u_progress" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="lcrng.cpp" FORMNAME="" UNITNAME="lcrng" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
@@ -66,7 +69,7 @@ AutoIncBuild=0
 MajorVer=2
 MinorVer=0
 Release=0
-Build=49
+Build=54
 Debug=0
 PreRelease=0
 Special=0
@@ -78,7 +81,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=MatrixS_Master
 FileDescription=Code Eye Cpp
-FileVersion=2.0.0.49
+FileVersion=2.0.0.54
 InternalName=CodeEye
 LegalCopyright=
 LegalTrademarks=

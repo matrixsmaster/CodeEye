@@ -66,6 +66,7 @@ object frmEdit: TfrmEdit
       object Deobfuscate1: TMenuItem
         Caption = 'Deobfuscate'
         ShortCut = 115
+        OnClick = Deobfuscate1Click
       end
       object N3: TMenuItem
         Caption = '-'

@@ -8,7 +8,7 @@ struct CEContentFilter {
     const char* f[MAXFILTERS];
 };
 
-static const CEContentFilter cont_filters[] = {
+const CEContentFilter cont_filters[] = {
     {
         "0123456789",
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
@@ -29,7 +29,7 @@ struct CEFileType {
     int filter_id;
 };
 
-static const CEFileType reg_types[] = {
+const CEFileType reg_types[] = {
     { "C",   "C Source File", 0, 0 },
     { "CPP", "C++ Source File", 0, 0 },
     { "H",   "C/C++ Header", 0, 0 },

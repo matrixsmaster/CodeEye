@@ -8,11 +8,12 @@
 #include <Forms.hpp>
 #include <FileCtrl.hpp>
 #include <Menus.hpp>
-#include "u_editor.h"
 #include <ExtCtrls.hpp>
 #include <Buttons.hpp>
 #include <Dialogs.hpp>
 #include <ComCtrls.hpp>
+#include "u_editor.h"
+#include "lcrng.h"
 //---------------------------------------------------------------------------
 #define MIXPROJ_PREFIX "MixProj_"
 #define MIXPROJ_SUFFIX ".txt"
@@ -54,9 +55,9 @@ __published:	// IDE-managed Components
     TDriveComboBox *DriveComboBox1;
     TMenuItem *Edit2;
     TMenuItem *Disclaimer1;
-    TProgressBar *pbar1;
     TOpenDialog *od1;
     TMenuItem *N2;
+    TMenuItem *Mixit1;
 	void __fastcall Exit1Click(TObject *Sender);
 	void __fastcall About1Click(TObject *Sender);
 	void __fastcall selFileChange(TObject *Sender);
@@ -75,14 +76,16 @@ private:	// User declarations
 	TList* windows;
     CEOCacheLine* cache;
 	bool once;
+    CLCRNG* rng;
 	void __fastcall Generator(AnsiString prjDir, AnsiString prjName, AnsiString flName);
     void __fastcall OpenWindow(AnsiString fn);
 	void __fastcall DestroyWindows();
     void __fastcall ObfuscatePrepare();
-    void __fastcall Obfuscate(TStrings* body, int tid);
     int __fastcall LineCounter(TStrings* body);
 public:		// User declarations
 	__fastcall TForm1(TComponent* Owner);
+    void __fastcall Obfuscate(TStrings* body, int tid);
+    AnsiString __fastcall Deobfuscate(CLCRNG* lrng, AnsiString str, int tid);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TForm1 *Form1;

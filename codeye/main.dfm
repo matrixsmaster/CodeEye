@@ -34,16 +34,6 @@ object Form1: TForm1
     Height = 13
     Caption = 'Drive'
   end
-  object pbar1: TProgressBar
-    Left = 8
-    Top = 248
-    Width = 289
-    Height = 33
-    Min = 0
-    Max = 100
-    TabOrder = 6
-    Visible = False
-  end
   object selDir: TDirectoryListBox
     Left = 8
     Top = 40
@@ -97,10 +87,15 @@ object Form1: TForm1
     OnChange = DriveComboBox1Change
   end
   object MainMenu1: TMainMenu
-    Left = 160
-    Top = 152
+    Left = 16
+    Top = 184
     object File1: TMenuItem
       Caption = 'File'
+      object Mixit1: TMenuItem
+        Caption = 'Mix it'
+        ShortCut = 116
+        OnClick = BitBtn1Click
+      end
       object Openmixfile1: TMenuItem
         Caption = 'Open mix file'
         ShortCut = 114
@@ -150,14 +145,14 @@ object Form1: TForm1
     Filter = 'Text files|*.txt|All files|*.*'
     Options = [ofEnableSizing]
     Title = 'Save MixProject file'
-    Left = 336
-    Top = 152
+    Left = 48
+    Top = 184
   end
   object od1: TOpenDialog
     DefaultExt = 'txt'
     Filter = 'Text files|*.txt|All files|*.*'
     Title = 'Open MixProject file'
-    Left = 376
-    Top = 152
+    Left = 80
+    Top = 184
   end
 end

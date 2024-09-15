@@ -5,6 +5,7 @@
 #include "main.h"
 #include "file_types.h"
 #include "u_about.h"
+#include "u_progress.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -63,12 +64,14 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 	windows->Clear();
 
 	dPath = ExtractFilePath(Application->ExeName);
+    rng = new CLCRNG();
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::FormDestroy(TObject *Sender)
 {
 	DestroyWindows();
 	delete windows;
+    delete rng;
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::DestroyWindows()
@@ -137,8 +140,11 @@ void __fastcall TForm1::Generator(AnsiString prjDir, AnsiString prjName, AnsiStr
 	main->Append("");
     main->Append("");
 
-    // add obfuscation disclaimer
+    // prepare obfuscation
     if (CheckBox1->Checked) {
+        rng->setSeed(prjName.c_str());
+        // add disclaimer text
+        //TODO
     }
 
     // process all files
@@ -294,12 +300,35 @@ void __fastcall TForm1::Obfuscate(TStrings* body, int tid)
             int l = cache[fid].tab[str[j]].len;
             if (!l) continue;
 
-            int r = (rand() % l) + cache[fid].tab[str[j]].idx;
+            int r = (rng->getPosInt() % l) + cache[fid].tab[str[j]].idx;
             if (r >= l) r -= l;
             str[j] = cache[fid].tab[str[j]].line[r];
         }
         body->Strings[i] = str;
     }
+}
+//---------------------------------------------------------------------------
+AnsiString __fastcall TForm1::Deobfuscate(CLCRNG* lrng, AnsiString str, int tid)
+{
+    // check args and select appropriate filter
+    if (!lrng || str.IsEmpty() || tid < 0) return str;
+    int fid = reg_types[tid].filter_id;
+    if (fid < 0) return str; // no filter, return verbatim
+
+    AnsiString res;
+    for (int j = 1; j <= str.Length(); j++) {
+        int l = cache[fid].tab[str[j]].len;
+        if (!l) {
+            res += str[j];
+            continue;
+        }
+
+        int r = lrng->getPosInt() % l;
+        int d = cache[fid].tab[str[j]].idx - r;
+        if (d < 0) d += l;
+        res += cache[fid].tab[str[j]].line[d];
+    }
+    return res;
 }
 //---------------------------------------------------------------------------
 int __fastcall TForm1::LineCounter(TStrings* body)

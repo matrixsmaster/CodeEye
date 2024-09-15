@@ -3,6 +3,7 @@ object frmSelDest: TfrmSelDest
   Top = 109
   Width = 531
   Height = 296
+  BorderIcons = [biSystemMenu, biMaximize]
   Caption = 'Select destination'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
