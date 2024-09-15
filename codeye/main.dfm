@@ -4,8 +4,8 @@ object Form1: TForm1
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'MSM'#39's Code Eye'
-  ClientHeight = 265
-  ClientWidth = 515
+  ClientHeight = 297
+  ClientWidth = 513
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,31 +20,25 @@ object Form1: TForm1
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
-  object Label2: TLabel
-    Left = 424
+  object Label4: TLabel
+    Left = 8
     Top = 240
-    Width = 79
-    Height = 16
-    Caption = 'C++ Edition'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clRed
-    Font.Height = -13
-    Font.Name = 'MS Sans Serif'
-    Font.Style = [fsBold]
-    ParentFont = False
-  end
-  object Label3: TLabel
-    Left = 184
-    Top = 200
-    Width = 39
+    Width = 62
     Height = 13
-    Caption = 'Method:'
+    Caption = 'Project name'
+  end
+  object Label1: TLabel
+    Left = 8
+    Top = 8
+    Width = 25
+    Height = 13
+    Caption = 'Drive'
   end
   object selDir: TDirectoryListBox
     Left = 8
-    Top = 8
+    Top = 40
     Width = 201
-    Height = 177
+    Height = 185
     FileList = selFile
     ItemHeight = 16
     TabOrder = 0
@@ -53,67 +47,57 @@ object Form1: TForm1
     Left = 216
     Top = 8
     Width = 289
-    Height = 177
+    Height = 217
     ItemHeight = 13
     TabOrder = 1
     OnChange = selFileChange
     OnDblClick = selFileDblClick
   end
-  object Button1: TButton
-    Left = 160
-    Top = 224
-    Width = 201
-    Height = 33
-    Caption = 'Mix Project and View'
+  object Edit1: TEdit
+    Left = 80
+    Top = 240
+    Width = 217
+    Height = 21
     TabOrder = 2
-    OnClick = Button1Click
   end
-  object Panel1: TPanel
-    Left = 8
-    Top = 192
-    Width = 121
-    Height = 33
+  object cb1: TComboBox
+    Left = 40
+    Top = 8
+    Width = 73
+    Height = 21
+    ItemHeight = 13
     TabOrder = 3
-    object Label1: TLabel
-      Left = 8
-      Top = 4
-      Width = 25
-      Height = 13
-      Caption = 'Drive'
-    end
-    object cb1: TComboBox
-      Left = 40
-      Top = 4
-      Width = 73
-      Height = 21
-      ItemHeight = 13
-      TabOrder = 0
-      OnChange = cb1Change
-    end
+    OnChange = cb1Change
   end
-  object RadioButton1: TRadioButton
-    Left = 240
-    Top = 200
-    Width = 49
-    Height = 17
-    Caption = 'Rich'
+  object BitBtn1: TBitBtn
+    Left = 304
+    Top = 240
+    Width = 201
+    Height = 49
+    Caption = 'Mix!'
     TabOrder = 4
+    OnClick = BitBtn1Click
+    Kind = bkAll
   end
-  object RadioButton2: TRadioButton
-    Left = 296
-    Top = 200
-    Width = 57
+  object CheckBox1: TCheckBox
+    Left = 80
+    Top = 272
+    Width = 73
     Height = 17
-    Caption = 'Classic'
-    Checked = True
+    Caption = 'Obfuscate'
     TabOrder = 5
-    TabStop = True
   end
   object MainMenu1: TMainMenu
     Left = 160
     Top = 152
     object File1: TMenuItem
       Caption = 'File'
+      object Openmixfile1: TMenuItem
+        Caption = 'Open mix file'
+      end
+      object N1: TMenuItem
+        Caption = '-'
+      end
       object Exit1: TMenuItem
         Caption = 'Exit'
         OnClick = Exit1Click
@@ -130,11 +114,16 @@ object Form1: TForm1
       Caption = 'Help'
       object Launchparams1: TMenuItem
         Caption = 'Launch params'
+        OnClick = Launchparams1Click
       end
       object About1: TMenuItem
         Caption = 'About'
         OnClick = About1Click
       end
     end
+  end
+  object sd1: TSaveDialog
+    Left = 336
+    Top = 152
   end
 end

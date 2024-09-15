@@ -1,6 +1,6 @@
 object AboutBox: TAboutBox
-  Left = 355
-  Top = 378
+  Left = 500
+  Top = 112
   BorderStyle = bsDialog
   Caption = 'About'
   ClientHeight = 213
@@ -354,38 +354,25 @@ object AboutBox: TAboutBox
       Top = 40
       Width = 62
       Height = 13
-      Caption = 'Version 1.3.5'
+      Caption = 'Version 2.0.0'
       IsControl = True
     end
     object Copyright: TLabel
       Left = 8
       Top = 80
-      Width = 203
+      Width = 254
       Height = 13
-      Caption = 'Copyright (C) MatrixS_Master (MSM), 2007.'
+      Caption = 'Copyright (C) MatrixS_Master (MSM), 2007,2009,2024'
       IsControl = True
     end
     object Comments: TLabel
       Left = 8
-      Top = 96
+      Top = 104
       Width = 86
       Height = 13
       Caption = 'All rights reserved.'
       WordWrap = True
       IsControl = True
-    end
-    object Label1: TLabel
-      Left = 88
-      Top = 128
-      Width = 105
-      Height = 13
-      Caption = 'Only for Cpp Projects !'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clRed
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentFont = False
     end
   end
   object OKButton: TButton

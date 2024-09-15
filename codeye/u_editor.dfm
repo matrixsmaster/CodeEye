@@ -38,6 +38,15 @@ object frmEdit: TfrmEdit
     Top = 120
     object File1: TMenuItem
       Caption = 'File'
+      object Open1: TMenuItem
+        Caption = 'Open'
+      end
+      object Resave1: TMenuItem
+        Caption = 'Resave'
+      end
+      object Saveas1: TMenuItem
+        Caption = 'Save as...'
+      end
       object Close1: TMenuItem
         Caption = 'Close'
         OnClick = Close1Click
@@ -45,6 +54,9 @@ object frmEdit: TfrmEdit
     end
     object Edit1: TMenuItem
       Caption = 'Edit'
+      object Deobfuscate1: TMenuItem
+        Caption = 'Deobfuscate'
+      end
       object SelectAll1: TMenuItem
         Caption = 'Select All'
         ShortCut = 16449

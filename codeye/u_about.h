@@ -23,7 +23,6 @@ __published:
 	TLabel *Copyright;
 	TLabel *Comments;
 	TButton *OKButton;
-        TLabel *Label1;
 private:
 public:
 	virtual __fastcall TAboutBox(TComponent* AOwner);
