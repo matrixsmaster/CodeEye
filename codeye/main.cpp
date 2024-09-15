@@ -261,8 +261,8 @@ void __fastcall TForm1::Launchparams1Click(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TForm1::ObfuscatePrepare()
 {
-    cache = (CEOCacheLine*)malloc(NUMITEMS(reg_types)*sizeof(CEOCacheLine));
-    for (int i = 0; i < NUMITEMS(reg_types); i++) {
+    cache = (CEOCacheLine*)malloc(NUMITEMS(cont_filters)*sizeof(CEOCacheLine));
+    for (int i = 0; i < NUMITEMS(cont_filters); i++) {
         for (int j = 0; j < 256; j++) {
         }
     }

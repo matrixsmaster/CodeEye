@@ -65,7 +65,7 @@ AutoIncBuild=0
 MajorVer=2
 MinorVer=0
 Release=0
-Build=42
+Build=44
 Debug=0
 PreRelease=0
 Special=0
@@ -77,7 +77,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=MatrixS_Master
 FileDescription=Code Eye Cpp
-FileVersion=2.0.0.42
+FileVersion=2.0.0.44
 InternalName=CodeEye
 LegalCopyright=
 LegalTrademarks=

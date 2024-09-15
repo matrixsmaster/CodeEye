@@ -2,69 +2,47 @@
 #define FileTypesH
 
 #define NUMITEMS(X) (sizeof(X) / sizeof((X)[0]))
+#define MAXFILTERS 5
+
+struct CEContentFilter {
+    const char* f[MAXFILTERS];
+};
+
+static const CEContentFilter cont_filters[] = {
+    {
+        "0123456789",
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        "abcdefghijklmnopqrstuvwxyz",
+        "<>!@$%^&+-|",
+        NULL
+    },
+    {
+        "0123456789ABCDEF",
+        NULL
+    }
+};
 
 struct CEFileType {
     const char* ext;
     const char* desc;
     int appendix;
-    const char* filter[];
+    int filter_id;
 };
 
 static const CEFileType reg_types[] = {
-    { "CPP", "C++ Source File", 0, {
-        "0123456789",
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-        "abcdefghijklmnopqrstuvwxyz",
-        "<>!@$%^&+-|" } },
+    { "C",   "C Source File", 0, 0 },
+    { "CPP", "C++ Source File", 0, 0 },
+    { "H",   "C/C++ Header", 0, 0 },
+    { "HPP", "C++ Header (HPP)", 0, 0 },
+    { "ASM", "Assembly Code", 0, -1 },
+    { "DFM", "Delphi Form File", 1, 2 },
+    { "XFM", "CLX Form File", 1, 2 },
+    { "BPR", "Borland Project File", 2, -1 },
+    { "RC",  "Resource Script", 2, -1 },
+    { "CLW", "MFC Class Wizard File", 2, -1 },
+    { "DSW", "MS DevStudio Workspace", 2, -1 },
+    { "DSP", "MS DevStudio Project File", 2, -1 },
 };
-/*
-                if (fext.UpperCase()==".H") {
-                        descr0 = "C/C++ Header";
-                        merge = true;
-                }
-                if (fext.UpperCase()==".HPP") {
-                        descr0 = "C++ Header (HPP)";
-                        merge = true;
-                }
-                if (fext.UpperCase()==".ASM") {
-                        descr0 = "Assembler Code";
-                        merge = true;
-                }
-                if (fext.UpperCase()==".DFM") {
-                        descr0 = "Delphi Form File";
-                        formfile = true;
-                        merge = true;
-                }
-                if (fext.UpperCase()==".XFM") {
-                        descr0 = "CLX Form File";
-                        formfile = true;
-                        merge = true;
-                }
-                if (fext.UpperCase()==".BPR") {
-                        descr0 = "BCB Project File";
-                        apd2file = true;
-                        merge = true;
-                }
-                if (fext.UpperCase()==".RC") {
-                        descr0 = "Resource Script";
-                        apd2file = true;
-                        merge = true;
-                }
-                if (fext.UpperCase()==".CLW") {
-                        descr0 = "MFC Class Wizard File";
-                        apd2file = true;
-                        merge = true;
-                }
-                if (fext.UpperCase()==".DSW") {
-                        descr0 = "MS DevStudio Workspace";
-                        apd2file = true;
-                        merge = true;
-                }
-                if (fext.UpperCase()==".DSP") {
-                        descr0 = "MS DevStudio Project File";
-                        apd2file = true;
-                        merge = true;
-                }
-*/
+
 #endif /*FileTypesH*/
 
