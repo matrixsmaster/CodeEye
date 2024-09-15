@@ -1,5 +1,4 @@
 //---------------------------------------------------------------------------
-
 #ifndef mainH
 #define mainH
 //---------------------------------------------------------------------------
@@ -14,7 +13,19 @@
 #include <Buttons.hpp>
 #include <Dialogs.hpp>
 //---------------------------------------------------------------------------
+#define MIXPROJ_PREFIX "MixProj_"
+#define MIXPROJ_SUFFIX ".txt"
+#define MIXPROJ_HEADER "MSM's Code Eye Project Mix File"
+//---------------------------------------------------------------------------
 typedef TfrmEdit *PEditor;
+struct CEOCacheEntry {
+    const char* line;
+    int len;
+};
+struct CEOCacheLine {
+    //int id;
+    CEOCacheEntry tab[256];
+};
 //---------------------------------------------------------------------------
 class TForm1 : public TForm
 {
@@ -29,7 +40,6 @@ __published:	// IDE-managed Components
 	TMenuItem *Window1;
 	TMenuItem *Closeall1;
 	TLabel *Label1;
-	TComboBox *cb1;
 	TMenuItem *Launchparams1;
     TLabel *Label4;
     TEdit *Edit1;
@@ -38,6 +48,9 @@ __published:	// IDE-managed Components
     TMenuItem *Openmixfile1;
     TMenuItem *N1;
     TSaveDialog *sd1;
+    TDriveComboBox *DriveComboBox1;
+    TMenuItem *Edit2;
+    TMenuItem *Disclaimer1;
 	void __fastcall Exit1Click(TObject *Sender);
 	void __fastcall About1Click(TObject *Sender);
 	void __fastcall selFileChange(TObject *Sender);
@@ -45,17 +58,22 @@ __published:	// IDE-managed Components
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall Closeall1Click(TObject *Sender);
-	void __fastcall cb1Change(TObject *Sender);
 	void __fastcall FormActivate(TObject *Sender);
     void __fastcall BitBtn1Click(TObject *Sender);
     void __fastcall Launchparams1Click(TObject *Sender);
+    void __fastcall DriveComboBox1Change(TObject *Sender);
 private:	// User declarations
 	AnsiString curFile;
 	AnsiString dPath;
-	TList *frms;
+	TList* windows;
+    CEOCacheLine* cache;
 	bool once;
-	void __fastcall Generator(AnsiString prjName, AnsiString flName);
+	void __fastcall Generator(AnsiString prjDir, AnsiString prjName, AnsiString flName);
+    void __fastcall OpenWindow(AnsiString fn);
 	void __fastcall DestroyWindows();
+    void __fastcall ObfuscatePrepare();
+    void __fastcall Obfuscate(TStrings* body, int tid);
+    int __fastcall LineCounter(TStrings* body);
 public:		// User declarations
 	__fastcall TForm1(TComponent* Owner);
 };

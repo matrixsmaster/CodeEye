@@ -1,6 +1,8 @@
 #ifndef FileTypesH
 #define FileTypesH
 
+#define NUMITEMS(X) (sizeof(X) / sizeof((X)[0]))
+
 struct CEFileType {
     const char* ext;
     const char* desc;
@@ -9,7 +11,7 @@ struct CEFileType {
 };
 
 static const CEFileType reg_types[] = {
-    { "cpp", "C++ Source File", 0, {
+    { "CPP", "C++ Source File", 0, {
         "0123456789",
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
         "abcdefghijklmnopqrstuvwxyz",

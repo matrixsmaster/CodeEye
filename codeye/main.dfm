@@ -60,22 +60,13 @@ object Form1: TForm1
     Height = 21
     TabOrder = 2
   end
-  object cb1: TComboBox
-    Left = 40
-    Top = 8
-    Width = 73
-    Height = 21
-    ItemHeight = 13
-    TabOrder = 3
-    OnChange = cb1Change
-  end
   object BitBtn1: TBitBtn
     Left = 304
     Top = 240
     Width = 201
     Height = 49
     Caption = 'Mix!'
-    TabOrder = 4
+    TabOrder = 3
     OnClick = BitBtn1Click
     Kind = bkAll
   end
@@ -85,7 +76,15 @@ object Form1: TForm1
     Width = 73
     Height = 17
     Caption = 'Obfuscate'
+    TabOrder = 4
+  end
+  object DriveComboBox1: TDriveComboBox
+    Left = 40
+    Top = 8
+    Width = 145
+    Height = 19
     TabOrder = 5
+    OnChange = DriveComboBox1Change
   end
   object MainMenu1: TMainMenu
     Left = 160
@@ -103,6 +102,12 @@ object Form1: TForm1
         OnClick = Exit1Click
       end
     end
+    object Edit2: TMenuItem
+      Caption = 'Edit'
+      object Disclaimer1: TMenuItem
+        Caption = 'Disclaimer'
+      end
+    end
     object Window1: TMenuItem
       Caption = 'Window'
       object Closeall1: TMenuItem
@@ -113,7 +118,7 @@ object Form1: TForm1
     object Help1: TMenuItem
       Caption = 'Help'
       object Launchparams1: TMenuItem
-        Caption = 'Launch params'
+        Caption = 'Launch args'
         OnClick = Launchparams1Click
       end
       object About1: TMenuItem
@@ -123,6 +128,9 @@ object Form1: TForm1
     end
   end
   object sd1: TSaveDialog
+    DefaultExt = 'txt'
+    Filter = 'Text files|*.txt|All files|*.*'
+    Options = [ofEnableSizing]
     Left = 336
     Top = 152
   end

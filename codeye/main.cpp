@@ -1,5 +1,4 @@
 //---------------------------------------------------------------------------
-
 #include <vcl.h>
 #pragma hdrstop
 
@@ -28,6 +27,23 @@ void __fastcall TForm1::About1Click(TObject *Sender)
     AboutBox->ShowModal();        
 }
 //---------------------------------------------------------------------------
+void __fastcall TForm1::OpenWindow(AnsiString fn)
+{
+    PEditor ptr;
+	ptr = new TfrmEdit(Form1);
+	windows->Add(ptr);
+
+    // add random unique name
+	AnsiString newName = "Editor_";
+	newName += IntToHex(random(65536),4);
+	newName += IntToHex(random(65536),4);
+
+    // point to the file to load, and open the new editor window
+	ptr->Name = newName;
+	ptr->fileForOpen = fn;
+	ptr->Show();
+}
+//---------------------------------------------------------------------------
 void __fastcall TForm1::selFileChange(TObject *Sender)
 {
 	curFile = selFile->FileName;
@@ -35,47 +51,34 @@ void __fastcall TForm1::selFileChange(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TForm1::selFileDblClick(TObject *Sender)
 {
-	PEditor ptr;
-	ptr = new TfrmEdit(Form1);
-	frms->Add(ptr);
-	AnsiString newName = "UniqFrmEditN_";
-	newName += IntToHex(random(65536),4);
-	newName += IntToHex(random(65536),4);
-	ptr->Name = newName;
-	ptr->fileForOpen = curFile;
-	ptr->Show();
+    OpenWindow(curFile);
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::FormCreate(TObject *Sender)
 {
-	frms = new TList();
-	frms->Clear();
-	Randomize();
+    Randomize();
+    ObfuscatePrepare();
+
+	windows = new TList();
+	windows->Clear();
+
 	dPath = ExtractFilePath(Application->ExeName);
-	cb1->Items->Clear();
-	AnsiString _str;
-	for (char i='A'; i<='Z'; i++) {
-		_str = "";
-		_str += i;
-		_str += ": ";
-		cb1->Items->Add(_str);
-	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::FormDestroy(TObject *Sender)
 {
 	DestroyWindows();
-	delete frms;
+	delete windows;
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::DestroyWindows()
 {
 	PEditor ptr;
-	for (int i=0; i<frms->Count; i++) {
-		ptr = (PEditor) frms->Items[i];
+	for (int i=0; i<windows->Count; i++) {
+		ptr = (PEditor)(windows->Items[i]);
 		if (ptr) delete ptr;
 	}
-	frms->Clear();
+	windows->Clear();
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::Closeall1Click(TObject *Sender)
@@ -83,11 +86,9 @@ void __fastcall TForm1::Closeall1Click(TObject *Sender)
 	DestroyWindows();
 }
 //---------------------------------------------------------------------------
-void __fastcall TForm1::cb1Change(TObject *Sender)
+void __fastcall TForm1::DriveComboBox1Change(TObject *Sender)
 {
-	if (cb1->ItemIndex<0) return;
-	char ch = cb1->Text[1];
-	selDir->Drive = ch;
+	selDir->Drive = DriveComboBox1->Drive;
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::BitBtn1Click(TObject *Sender)
@@ -96,142 +97,160 @@ void __fastcall TForm1::BitBtn1Click(TObject *Sender)
 		ShowMessage("Nothing to mix!");
 		return;
 	}
-	AnsiString projectName = Edit1->Text;
-	if (projectName.IsEmpty()) return;
-	AnsiString c_fn = dPath+"MixProj_"+projectName+".TXT";
-	Generator(projectName,c_fn);
-	ShowMessage("Project mixed to file:\n"+c_fn);
-	// show file
-	PEditor ptr;
-	ptr = new TfrmEdit(Form1);
-	frms->Add(ptr);
-	AnsiString newName = "UniqProjMixView_";
-	newName += IntToHex(random(65536),4);
-	newName += IntToHex(random(65536),4);
-	ptr->Name = newName;
-	ptr->fileForOpen = c_fn;
-	ptr->Show();
+
+    // check the project's name
+    AnsiString projectName = Edit1->Text;
+    if (projectName.IsEmpty()) return;
+
+    // generate resulting file name and confirm it with the user
+    AnsiString c_fn = dPath + MIXPROJ_PREFIX + projectName + MIXPROJ_SUFFIX;
+    sd1->FileName = c_fn;
+    if (!sd1->Execute()) return;
+    if (sd1->FileName.IsEmpty()) return;
+    c_fn = sd1->FileName;
+
+    // mix it up
+    Generator(selDir->Directory,projectName,c_fn);
+    ShowMessage("Project mixed to file:\n" + c_fn);
+
+    // show the resulting file
+    OpenWindow(c_fn);
 }
 //---------------------------------------------------------------------------
-void __fastcall TForm1::Generator(AnsiString prjName, AnsiString flName)
+void __fastcall TForm1::Generator(AnsiString prjDir, AnsiString prjName, AnsiString flName)
 {
 	if (selFile->Items->Count<1) return;
-	AnsiString cDir = selDir->Directory;
-	cDir += "\\";
-	AnsiString _vs,fext,vss;
-	AnsiString descr0 = "";
-	bool merge,formfile,apd2file;
-	int j;
+
 	int totline = 0;
-	TStrings *temp = new TStringList();
-	TStrings *_dat = new TStringList();
-	TStrings *tmp2 = new TStringList();
-	TStrings *tmp3 = new TStringList();
-	TStrings *_cur = NULL;
-	temp->Clear();
-	temp->Append(DateToStr(Date())+'@'+TimeToStr(Time()));
-	temp->Append("MSM's Code Eye Project Mix File");
-	temp->Append("");
-	temp->Append("Project = '"+prjName+"'");
-	temp->Append("");
-	AnsiString _razdel = "";
-	_razdel = _razdel.StringOfChar('-',65);
-	temp->Append("");
-	tmp2->Clear();
-	tmp3->Clear();
-	_dat->Clear();
+	TStrings* main = new TStringList();
+	TStrings* forms = new TStringList();
+	TStrings* projf = new TStringList();
+	TStrings* tmp = new TStringList();
+	AnsiString splitter;
+	splitter = splitter.StringOfChar('-',65);
+
+    // add global header
+	main->Append(DateToStr(Date())+'@'+TimeToStr(Time()));
+	main->Append(MIXPROJ_HEADER);
+	main->Append("");
+	main->Append("Project = '"+prjName+"'");
+	main->Append("");
+    main->Append("");
+
+    // add obfuscation disclaimer
+    if (CheckBox1->Checked) {
+    }
+
+    // process all files
 	for (int i=0; i<selFile->Items->Count; i++) {
-		_vs = selFile->Items->Strings[i];
-		if (_vs.IsEmpty()) continue;
-		fext = ExtractFileExt(_vs);
-		merge = false;
-		formfile = false;
-		apd2file = false;
-//FIXME: USE TABLE
-		if (!merge) continue;
-		_dat->LoadFromFile(cDir+_vs);
-		_cur = temp; // by default
-		// form?? then add to end!
-		if (formfile) _cur = tmp2;
-		// files for Appendix-2
-		if (apd2file) _cur = tmp3;
-		// adding
-		_cur->Append("");
-		_cur->Append(_razdel);
-		_cur->Append("File '"+_vs+"'  "+descr0);
-		_cur->Append("");
-		for (j=0; j<_dat->Count; j++) {
-			vss = _dat->Strings[j];
-			_cur->Append(vss);
-			if (_cur==temp) {
-				//FIXME: wrong comment detection
-				if ( (!vss.IsEmpty())&&(vss.Length()>2)&&(vss[1]!='/')&&(vss[2]!='/')&&(vss[2]!='*') )
-					totline++;
-			}
-		}
-//                _cur->Append("");
+		AnsiString fn = selFile->Items->Strings[i];
+		if (fn.IsEmpty()) continue;
+
+        // extract and format file's extension
+		AnsiString ext = ExtractFileExt(fn).UpperCase();
+        if (ext.IsEmpty()) continue;
+        if (ext[1] == '.') ext.Delete(1,1);
+
+        // find appropriate file type record
+        TStrings* targ = NULL;
+        int typeno = -1;
+        for (int j = 0; j < NUMITEMS(reg_types); j++) {
+            if (AnsiString(reg_types[j].ext) != ext) continue;
+
+            // record found
+            switch (reg_types[j].appendix) {
+            case 0: targ = main; break;
+            case 1: targ = forms; break;
+            case 2: targ = projf; break;
+            default:
+                ShowMessage("Unknown appendix index "+IntToStr(reg_types[j].appendix));
+                // it's a fatal-type error, we don't care about memory leaks
+                Application->Terminate();
+            }
+
+            typeno = j;
+            break;
+        }
+		if (!targ || typeno < 0) continue;
+
+        // add appropriate file header
+		targ->Append("");
+		targ->Append(splitter);
+		targ->Append("File '" + fn + "'  " + reg_types[typeno].desc);
+		targ->Append("");
+
+        // load the file and count the lines
+        tmp->LoadFromFile(prjDir + "\\" + fn);
+        if (reg_types[typeno].appendix == 0)
+            totline += LineCounter(tmp);
+
+        // if requested, obfuscate the contents
+        if (CheckBox1->Checked) Obfuscate(tmp,typeno);
+        targ->AddStrings(tmp);
 	}
-	// sum infos (COMPILING) ---------
-	temp->Append(_razdel);
-	temp->Append("");
-	temp->Append("Total code lines count: "+IntToStr(totline));
-	temp->Append("");
-	temp->Append(_razdel.StringOfChar('*',80));
-	temp->Append("Appendix 1. Borland Form Files Data.");
-	temp->Append(_razdel);
-	for (j=0; j<tmp2->Count; j++)
-		temp->Append(tmp2->Strings[j]);
-	temp->Append(_razdel);
-	temp->Append("");
-	temp->Append(_razdel.StringOfChar('*',80));
-	temp->Append("Appendix 2. Other Project Files.");
-	temp->Append(_razdel);
-	for (j=0; j<tmp3->Count; j++)
-		temp->Append(tmp3->Strings[j]);
-	temp->Append(_razdel);
-	temp->Append("");
-	temp->Append("This file is generated by MSM's Code Eye");
-	temp->Append("REPO"); //FIXME: add github/lab URL
-	temp->Append("");
-	// -------------------END COMPILE
-	// save
-	temp->SaveToFile(flName);
+
+	// add summary information
+	main->Append(splitter);
+	main->Append("");
+	main->Append("Total code lines count: "+IntToStr(totline));
+	main->Append("");
+
+    // add Appendix 1 (form data)
+	main->Append(splitter.StringOfChar('*',80));
+	main->Append("Appendix 1. Borland Form Files Data");
+	main->Append(splitter);
+    main->AddStrings(forms);
+	main->Append(splitter);
+	main->Append("");
+
+    // add Appendix 2 (project files)
+	main->Append(splitter.StringOfChar('*',80));
+	main->Append("Appendix 2. Other Project Files");
+	main->Append(splitter);
+	main->AddStrings(projf);
+	main->Append(splitter);
+	main->Append("");
+
+    // add final section
+    main->Append("");
+	main->Append("This file is generated by MSM's Code Eye");
+	main->Append("REPO"); //FIXME: add github/lab URL
+	main->Append("");
+
+	// save the end result
+	main->SaveToFile(flName);
+
 	// free memory
-	temp->Clear();
-	_dat->Clear();
-	tmp2->Clear();
-	tmp3->Clear();
-	delete _dat;
-	delete temp;
-	delete tmp2;
-	delete tmp3;
-	_cur = NULL;
+	delete projf;
+	delete forms;
+	delete main;
+	delete tmp;
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::FormActivate(TObject *Sender)
 {
-	if (!once) {
-		once = true;
-		AnsiString s;
-		// params parsing
-		if (ParamCount()>=1) /*set dir*/ {
-			s = ParamStr(1);
-			char drv = UpCase(s[1]);
-			if ((drv<'A')||(drv>'Z')) return;
-			selDir->Drive = drv;
-			cb1->Text = drv;
-			selDir->Directory = s;
-			Application->ProcessMessages();
-		}
-		if (ParamCount()>=2) /*autocompile*/ {
-			s = ParamStr(2);
-			if (s.Length()<2) return;
-			Generator(s,dPath+"MixProj_"+s+".TXT");
-			Application->ProcessMessages();
-		}
-		if (ParamCount()>=3) /*autoclose*/ {
-			if (ParamStr(3)=="close") this->Close();
-		}
+	if (once) return;
+	once = true;
+    
+	AnsiString s;
+	// params parsing
+	if (ParamCount()>=1) /*set dir*/ {
+		s = ParamStr(1);
+		char drv = UpCase(s[1]);
+		if ((drv<'A')||(drv>'Z')) return;
+		selDir->Drive = drv;
+		DriveComboBox1->Drive = drv;
+		selDir->Directory = s;
+		Application->ProcessMessages();
+	}
+	if (ParamCount()>=2) /*autocompile*/ {
+		s = ParamStr(2);
+		if (s.Length()<2) return;
+		Generator(selDir->Directory,s,dPath+MIXPROJ_PREFIX+s+MIXPROJ_SUFFIX);
+		Application->ProcessMessages();
+	}
+	if (ParamCount()>=3) /*autoclose*/ {
+		if (ParamStr(3)=="close") this->Close();
 	}
 }
 //---------------------------------------------------------------------------
@@ -240,4 +259,20 @@ void __fastcall TForm1::Launchparams1Click(TObject *Sender)
     //ShowMessage(
 }
 //---------------------------------------------------------------------------
-
+void __fastcall TForm1::ObfuscatePrepare()
+{
+    cache = (CEOCacheLine*)malloc(NUMITEMS(reg_types)*sizeof(CEOCacheLine));
+    for (int i = 0; i < NUMITEMS(reg_types); i++) {
+        for (int j = 0; j < 256; j++) {
+        }
+    }
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::Obfuscate(TStrings* body, int tid)
+{
+}
+//---------------------------------------------------------------------------
+int __fastcall TForm1::LineCounter(TStrings* body)
+{
+}
+//---------------------------------------------------------------------------
