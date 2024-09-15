@@ -12,6 +12,7 @@
 #include <ExtCtrls.hpp>
 #include <Buttons.hpp>
 #include <Dialogs.hpp>
+#include <ComCtrls.hpp>
 //---------------------------------------------------------------------------
 #define MIXPROJ_PREFIX "MixProj_"
 #define MIXPROJ_SUFFIX ".txt"
@@ -51,6 +52,7 @@ __published:	// IDE-managed Components
     TDriveComboBox *DriveComboBox1;
     TMenuItem *Edit2;
     TMenuItem *Disclaimer1;
+    TProgressBar *pbar1;
 	void __fastcall Exit1Click(TObject *Sender);
 	void __fastcall About1Click(TObject *Sender);
 	void __fastcall selFileChange(TObject *Sender);

@@ -261,18 +261,46 @@ void __fastcall TForm1::Launchparams1Click(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TForm1::ObfuscatePrepare()
 {
-    cache = (CEOCacheLine*)malloc(NUMITEMS(cont_filters)*sizeof(CEOCacheLine));
+    size_t glen = NUMITEMS(cont_filters) * sizeof(CEOCacheLine);
+    cache = (CEOCacheLine*)malloc(glen);
+    memset(cache,0,glen);
+    
     for (int i = 0; i < NUMITEMS(cont_filters); i++) {
-        for (int j = 0; j < 256; j++) {
+        for (int j = 0; j < MAXFILTERS; j++) {
+            if (!cont_filters[i].f[j]) continue;
+            int len = strlen(cont_filters[i].f[j]);
+            for (int k = 0; k < 256; k++) {
+                if (strchr(cont_filters[i].f[j],(char)k)) {
+                    cache[i].tab[k].len = len;
+                    cache[i].tab[k].line = cont_filters[i].f[j];
+                }
+            }
         }
     }
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::Obfuscate(TStrings* body, int tid)
 {
+    // check args and select appropriate filter
+    if (!body || tid < 0) return;
+    int fid = reg_types[tid].filter_id;
+    if (fid < 0) return; // no filter, nothing to do
+
+    for (int i = 0; i < body->Count; i++) {
+        AnsiString str = body->Strings[i];
+        for (int j = 1; j <= str.Length(); j++) {
+            int l = cache[fid].tab[str[j]].len;
+            if (!l) continue;
+
+            int r = ((rand() % l) + (int)(str[j])) % l;
+            str[j] = cache[fid].tab[str[j]].line[r];
+        }
+        body->Strings[i] = str;
+    }
 }
 //---------------------------------------------------------------------------
 int __fastcall TForm1::LineCounter(TStrings* body)
 {
+    return 0;
 }
 //---------------------------------------------------------------------------

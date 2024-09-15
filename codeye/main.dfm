@@ -34,6 +34,16 @@ object Form1: TForm1
     Height = 13
     Caption = 'Drive'
   end
+  object pbar1: TProgressBar
+    Left = 8
+    Top = 248
+    Width = 289
+    Height = 33
+    Min = 0
+    Max = 100
+    TabOrder = 6
+    Visible = False
+  end
   object selDir: TDirectoryListBox
     Left = 8
     Top = 40

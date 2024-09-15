@@ -18,7 +18,7 @@ static const CEContentFilter cont_filters[] = {
     },
     {
         "0123456789ABCDEF",
-        NULL
+        NULL, NULL, NULL, NULL
     }
 };
 
@@ -35,8 +35,8 @@ static const CEFileType reg_types[] = {
     { "H",   "C/C++ Header", 0, 0 },
     { "HPP", "C++ Header (HPP)", 0, 0 },
     { "ASM", "Assembly Code", 0, -1 },
-    { "DFM", "Delphi Form File", 1, 2 },
-    { "XFM", "CLX Form File", 1, 2 },
+    { "DFM", "Delphi Form File", 1, 1 },
+    { "XFM", "CLX Form File", 1, 1 },
     { "BPR", "Borland Project File", 2, -1 },
     { "RC",  "Resource Script", 2, -1 },
     { "CLW", "MFC Class Wizard File", 2, -1 },
