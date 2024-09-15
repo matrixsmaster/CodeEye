@@ -142,7 +142,6 @@ void __fastcall TForm1::Generator(AnsiString prjDir, AnsiString prjName, AnsiStr
 
     // prepare obfuscation
     if (CheckBox1->Checked) {
-        rng->setSeed(prjName.c_str());
         // add disclaimer text
         //TODO
     }
@@ -191,7 +190,10 @@ void __fastcall TForm1::Generator(AnsiString prjDir, AnsiString prjName, AnsiStr
             totline += LineCounter(tmp);
 
         // if requested, obfuscate the contents
-        if (CheckBox1->Checked) Obfuscate(tmp,typeno);
+        if (CheckBox1->Checked) {
+            rng->setSeed(fn.c_str());
+            Obfuscate(tmp,typeno);
+        }
         targ->AddStrings(tmp);
 	}
 

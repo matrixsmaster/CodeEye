@@ -103,36 +103,17 @@ void __fastcall TfrmEdit::Explode(AnsiString dir)
 //---------------------------------------------------------------------------
 void __fastcall TfrmEdit::Deobfuscate1Click(TObject *Sender)
 {
-    // find the project name
-    AnsiString prjname,curst;
-    for (int i = 0; i < TXT->Lines->Count; i++) {
-        curst = TXT->Lines->Strings[i];
-        if (curst.IsEmpty()) continue;
-        if (curst.Pos("Project = '") == 1) {
-            curst.Delete(1,11);
-            int j = curst.Pos("'");
-            if (j < 2) continue;
-            prjname = curst.SubString(1,j-1);
-            break;
-        }
-    }
-    if (prjname.IsEmpty()) {
-        ShowMessage("Unable to find project name!");
-        return;
-    }
-
     // prepare the generator
     CLCRNG* rng = new CLCRNG;
-    rng->setSeed(prjname.c_str());
+    int fsm = 0, tid = -1;
 
     // copy text to avoid updating the widget
     TStrings* res = new TStringList();
     res->AddStrings(TXT->Lines);
 
     // process all lines
-    int fsm = 0, tid = -1;
     for (int i = 0, j = 0; i < res->Count; i++) {
-        curst = res->Strings[i];
+        AnsiString curst = res->Strings[i];
         if (!fsm) {
             if (curst.IsEmpty()) continue;
             if (curst.Pos("File '") == 1) {
@@ -154,6 +135,9 @@ void __fastcall TfrmEdit::Deobfuscate1Click(TObject *Sender)
                         tid = j;
                 }
                 if (tid < 0) continue;
+
+                // ready to process
+                rng->setSeed(fn.c_str());
                 fsm = 1;
             }
         } else {
