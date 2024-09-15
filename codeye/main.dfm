@@ -1,10 +1,10 @@
 object Form1: TForm1
-  Left = 192
-  Top = 114
+  Left = 189
+  Top = 107
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'MSM'#39's Code Eye'
-  ClientHeight = 235
+  ClientHeight = 265
   ClientWidth = 515
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -15,13 +15,14 @@ object Form1: TForm1
   Menu = MainMenu1
   OldCreateOrder = False
   Position = poDesktopCenter
+  OnActivate = FormActivate
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object Label2: TLabel
     Left = 424
-    Top = 208
+    Top = 240
     Width = 79
     Height = 16
     Caption = 'C++ Edition'
@@ -31,6 +32,13 @@ object Form1: TForm1
     Font.Name = 'MS Sans Serif'
     Font.Style = [fsBold]
     ParentFont = False
+  end
+  object Label3: TLabel
+    Left = 184
+    Top = 200
+    Width = 39
+    Height = 13
+    Caption = 'Method:'
   end
   object selDir: TDirectoryListBox
     Left = 8
@@ -52,8 +60,8 @@ object Form1: TForm1
     OnDblClick = selFileDblClick
   end
   object Button1: TButton
-    Left = 8
-    Top = 192
+    Left = 160
+    Top = 224
     Width = 201
     Height = 33
     Caption = 'Mix Project and View'
@@ -61,7 +69,7 @@ object Form1: TForm1
     OnClick = Button1Click
   end
   object Panel1: TPanel
-    Left = 232
+    Left = 8
     Top = 192
     Width = 121
     Height = 33
@@ -83,6 +91,24 @@ object Form1: TForm1
       OnChange = cb1Change
     end
   end
+  object RadioButton1: TRadioButton
+    Left = 240
+    Top = 200
+    Width = 49
+    Height = 17
+    Caption = 'Rich'
+    TabOrder = 4
+  end
+  object RadioButton2: TRadioButton
+    Left = 296
+    Top = 200
+    Width = 57
+    Height = 17
+    Caption = 'Classic'
+    Checked = True
+    TabOrder = 5
+    TabStop = True
+  end
   object MainMenu1: TMainMenu
     Left = 160
     Top = 152
@@ -102,6 +128,9 @@ object Form1: TForm1
     end
     object Help1: TMenuItem
       Caption = 'Help'
+      object Launchparams1: TMenuItem
+        Caption = 'Launch params'
+      end
       object About1: TMenuItem
         Caption = 'About'
         OnClick = About1Click

@@ -31,6 +31,10 @@ __published:	// IDE-managed Components
         TComboBox *cb1;
         TLabel *Label2;
         TPanel *Panel1;
+        TRadioButton *RadioButton1;
+        TRadioButton *RadioButton2;
+        TLabel *Label3;
+        TMenuItem *Launchparams1;
         void __fastcall Exit1Click(TObject *Sender);
         void __fastcall About1Click(TObject *Sender);
         void __fastcall selFileChange(TObject *Sender);
@@ -40,10 +44,13 @@ __published:	// IDE-managed Components
         void __fastcall Closeall1Click(TObject *Sender);
         void __fastcall cb1Change(TObject *Sender);
         void __fastcall Button1Click(TObject *Sender);
+        void __fastcall FormActivate(TObject *Sender);
 private:	// User declarations
         AnsiString curFile;
         AnsiString dPath;
         TList *frms;
+        bool once;
+        void __fastcall Generator(AnsiString prjName, AnsiString flName);
         void __fastcall DestroyWindows();
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);
