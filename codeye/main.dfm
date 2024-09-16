@@ -114,11 +114,20 @@ object Form1: TForm1
       Caption = 'Edit'
       object Disclaimer1: TMenuItem
         Caption = 'Disclaimer'
+        Enabled = False
         OnClick = Disclaimer1Click
+      end
+      object Changelog1: TMenuItem
+        Caption = 'Changelog'
+        Enabled = False
       end
     end
     object Window1: TMenuItem
       Caption = 'Window'
+      object Arrange1: TMenuItem
+        Caption = 'Arrange'
+        Enabled = False
+      end
       object Closeall1: TMenuItem
         Caption = 'Close all'
         ShortCut = 122

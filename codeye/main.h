@@ -58,6 +58,8 @@ __published:	// IDE-managed Components
     TOpenDialog *od1;
     TMenuItem *N2;
     TMenuItem *Mixit1;
+    TMenuItem *Changelog1;
+    TMenuItem *Arrange1;
 	void __fastcall Exit1Click(TObject *Sender);
 	void __fastcall About1Click(TObject *Sender);
 	void __fastcall selFileChange(TObject *Sender);
