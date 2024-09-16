@@ -26,9 +26,12 @@ __published:	// IDE-managed Components
     TPanel *Panel3;
     TBitBtn *BitBtn1;
     TBitBtn *BitBtn2;
+    TBitBtn *BitBtn3;
+    TEdit *nDirName;
     void __fastcall Panel2Resize(TObject *Sender);
     void __fastcall selDrvChange(TObject *Sender);
     void __fastcall selDirChange(TObject *Sender);
+    void __fastcall BitBtn3Click(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
     __fastcall TfrmSelDest(TComponent* Owner);

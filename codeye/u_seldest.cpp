@@ -30,3 +30,10 @@ void __fastcall TfrmSelDest::selDirChange(TObject *Sender)
     fileList->Directory = selDir->Directory;
 }
 //---------------------------------------------------------------------------
+void __fastcall TfrmSelDest::BitBtn3Click(TObject *Sender)
+{
+    if (nDirName->Text.IsEmpty()) return;
+    MkDir(selDir->Directory+"\\"+nDirName->Text);
+    selDir->Update();
+}
+//---------------------------------------------------------------------------

@@ -70,6 +70,7 @@ __published:	// IDE-managed Components
     void __fastcall Launchparams1Click(TObject *Sender);
     void __fastcall DriveComboBox1Change(TObject *Sender);
     void __fastcall Openmixfile1Click(TObject *Sender);
+    void __fastcall Disclaimer1Click(TObject *Sender);
 private:	// User declarations
 	AnsiString curFile;
 	AnsiString dPath;

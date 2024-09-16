@@ -41,7 +41,7 @@ void __fastcall TForm1::OpenWindow(AnsiString fn)
 
     // point to the file to load, and open the new editor window
 	ptr->Name = newName;
-	ptr->fileForOpen = fn;
+	ptr->fileToOpen = fn;
 	ptr->Show();
 }
 //---------------------------------------------------------------------------
@@ -335,12 +335,19 @@ AnsiString __fastcall TForm1::Deobfuscate(CLCRNG* lrng, AnsiString str, int tid)
 //---------------------------------------------------------------------------
 int __fastcall TForm1::LineCounter(TStrings* body)
 {
-    return 0;
+    if (!body) return 0;
+    //FIXME: do line counting based on file type (incl. short and long comments)
+    return body->Count;
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::Openmixfile1Click(TObject *Sender)
 {
     if (!od1->Execute() || od1->FileName.IsEmpty()) return;
     OpenWindow(od1->FileName);
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::Disclaimer1Click(TObject *Sender)
+{
+    //TODO: edit or load disclaimer message
 }
 //---------------------------------------------------------------------------

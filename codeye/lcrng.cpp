@@ -11,7 +11,6 @@
 CLCRNG::CLCRNG()
 {
     seed = time(NULL);
-    log = new TStringList(); //FIXME: debug only!
 }
 //---------------------------------------------------------------------------
 CLCRNG::CLCRNG(uint32_t nseed)
@@ -21,9 +20,6 @@ CLCRNG::CLCRNG(uint32_t nseed)
 //---------------------------------------------------------------------------
 CLCRNG::~CLCRNG()
 {
-    //FIXME: debug only!
-    log->SaveToFile("lcrng.txt");
-    delete log;
 }
 //---------------------------------------------------------------------------
 void CLCRNG::setSeed(uint32_t nseed)
@@ -54,7 +50,6 @@ void CLCRNG::setSeed(const char* seedstr)
 void CLCRNG::Run()
 {
     next = (LCRNG_A * next + LCRNG_C) % LCRNG_M;
-    log->Add(IntToHex((int)next,8));
 }
 //---------------------------------------------------------------------------
 uint32_t CLCRNG::getDWord()

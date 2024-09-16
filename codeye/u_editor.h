@@ -41,10 +41,11 @@ __published:	// IDE-managed Components
 	void __fastcall Copy1Click(TObject *Sender);
     void __fastcall Explode1Click(TObject *Sender);
     void __fastcall Deobfuscate1Click(TObject *Sender);
+    void __fastcall Resave1Click(TObject *Sender);
 private:	// User declarations
     void __fastcall Explode(AnsiString dir);
 public:		// User declarations
-	AnsiString fileForOpen;
+	AnsiString fileToOpen;
 	__fastcall TfrmEdit(TComponent* Owner);
 };
 //---------------------------------------------------------------------------

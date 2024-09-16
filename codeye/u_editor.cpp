@@ -31,18 +31,18 @@ void __fastcall TfrmEdit::Background1Click(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TfrmEdit::FormShow(TObject *Sender)
 {
-	if (!FileExists(this->fileForOpen)) {
+	if (!FileExists(fileToOpen)) {
 		TXT->Clear();
 		TXT->Enabled = False;
 		return;
 	}
-	TXT->Lines->LoadFromFile(this->fileForOpen);
-	this->Caption = ExtractFileName(this->fileForOpen);
+	TXT->Lines->LoadFromFile(fileToOpen);
+	Caption = ExtractFileName(fileToOpen);
 }
 //---------------------------------------------------------------------------
 void __fastcall TfrmEdit::Close1Click(TObject *Sender)
 {
-	this->Close();        
+	Close();
 }
 //---------------------------------------------------------------------------
 void __fastcall TfrmEdit::SelectAll1Click(TObject *Sender)
@@ -98,7 +98,7 @@ void __fastcall TfrmEdit::Explode(AnsiString dir)
 
     // free memory and show some stats
     delete cur;
-    ShowMessage("Statistics:\nLines: "+IntToStr(l_cnt)+"\nFiles: "+IntToStr(f_cnt));
+    ShowMessage("Done!\n\nStatistics:\nLines: "+IntToStr(l_cnt)+"\nFiles: "+IntToStr(f_cnt));
 }
 //---------------------------------------------------------------------------
 void __fastcall TfrmEdit::Deobfuscate1Click(TObject *Sender)
@@ -158,4 +158,8 @@ void __fastcall TfrmEdit::Deobfuscate1Click(TObject *Sender)
     delete rng;
 }
 //---------------------------------------------------------------------------
-
+void __fastcall TfrmEdit::Resave1Click(TObject *Sender)
+{
+    if (!fileToOpen.IsEmpty()) TXT->Lines->SaveToFile(fileToOpen);
+}
+//---------------------------------------------------------------------------

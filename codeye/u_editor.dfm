@@ -48,9 +48,11 @@ object frmEdit: TfrmEdit
       object Resave1: TMenuItem
         Caption = 'Resave'
         ShortCut = 16467
+        OnClick = Resave1Click
       end
       object Saveas1: TMenuItem
         Caption = 'Save as...'
+        Enabled = False
       end
       object N2: TMenuItem
         Caption = '-'

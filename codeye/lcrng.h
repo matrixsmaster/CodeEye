@@ -3,7 +3,6 @@
 #define lcrngH
 
 #include <stdint.h>
-#include <vcl.h> // FIXME: debug only
 
 #define LCRNG_A 16807UL
 #define LCRNG_C 0
@@ -28,7 +27,6 @@ public:
 
 private:
     uint32_t seed, next;
-    TStrings* log; //FIXME: debug only!
 
     void Run();
 };
