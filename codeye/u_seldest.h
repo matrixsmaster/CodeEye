@@ -16,7 +16,7 @@
 //---------------------------------------------------------------------------
 class TfrmSelDest : public TForm
 {
-__published:	// IDE-managed Components
+__published:    // IDE-managed Components
     TDriveComboBox *selDrv;
     TFileListBox *fileList;
     TPanel *Panel1;
@@ -32,8 +32,8 @@ __published:	// IDE-managed Components
     void __fastcall selDrvChange(TObject *Sender);
     void __fastcall selDirChange(TObject *Sender);
     void __fastcall BitBtn3Click(TObject *Sender);
-private:	// User declarations
-public:		// User declarations
+private:    // User declarations
+public:        // User declarations
     __fastcall TfrmSelDest(TComponent* Owner);
 };
 //---------------------------------------------------------------------------

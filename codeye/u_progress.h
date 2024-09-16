@@ -11,10 +11,10 @@
 //---------------------------------------------------------------------------
 class TfrmProgress : public TForm
 {
-__published:	// IDE-managed Components
+__published:    // IDE-managed Components
     TProgressBar *pbar;
-private:	// User declarations
-public:		// User declarations
+private:    // User declarations
+public:        // User declarations
     __fastcall TfrmProgress(TComponent* Owner);
     void __fastcall SetProgress(int p);
 };

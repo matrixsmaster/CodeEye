@@ -11,31 +11,31 @@ USEFORM("u_progress.cpp", frmProgress);
 //---------------------------------------------------------------------------
 WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	try
-	{
-		Application->Initialize();
-		Application->Title = "Code Eye";
-		Application->CreateForm(__classid(TForm1), &Form1);
+    try
+    {
+        Application->Initialize();
+        Application->Title = "Code Eye";
+        Application->CreateForm(__classid(TForm1), &Form1);
          Application->CreateForm(__classid(TAboutBox), &AboutBox);
          Application->CreateForm(__classid(TfrmSelDest), &frmSelDest);
          Application->CreateForm(__classid(TfrmProgress), &frmProgress);
          Application->Run();
-	}
-	catch (Exception &exception)
-	{
-		Application->ShowException(&exception);
-	}
-	catch (...)
-	{
-		try
-		{
-			throw Exception("");
-		}
-		catch (Exception &exception)
-		{
-			Application->ShowException(&exception);
-		}
-	}
-	return 0;
+    }
+    catch (Exception &exception)
+    {
+        Application->ShowException(&exception);
+    }
+    catch (...)
+    {
+        try
+        {
+            throw Exception("");
+        }
+        catch (Exception &exception)
+        {
+            Application->ShowException(&exception);
+        }
+    }
+    return 0;
 }
 //---------------------------------------------------------------------------
