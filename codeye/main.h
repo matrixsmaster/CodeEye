@@ -20,6 +20,7 @@
 #define MIXPROJ_HEADER "MSM's Code Eye Project Mix File"
 #define SPLITTER_LEN 65
 #define CHAPTERSPLIT_LEN 80
+#define HEXDUMP_LEN 16
 //---------------------------------------------------------------------------
 typedef TfrmEdit *PEditor;
 struct CEOCacheEntry {
@@ -85,8 +86,10 @@ private:    // User declarations
     void __fastcall DestroyWindows();
     void __fastcall ObfuscatePrepare();
     int __fastcall LineCounter(TStrings* body);
+    void __fastcall LoadBinary(AnsiString fn, TStrings* to);
 public:        // User declarations
     __fastcall TForm1(TComponent* Owner);
+    int __fastcall GetFileTypeId(AnsiString fn);
     void __fastcall Obfuscate(TStrings* body, int tid);
     AnsiString __fastcall Deobfuscate(CLCRNG* lrng, AnsiString str, int tid);
 };

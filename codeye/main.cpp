@@ -1,5 +1,6 @@
 //---------------------------------------------------------------------------
 #include <vcl.h>
+#include <stdio.h>
 #pragma hdrstop
 
 #include "main.h"
@@ -151,32 +152,22 @@ void __fastcall TForm1::Generator(AnsiString prjDir, AnsiString prjName, AnsiStr
         AnsiString fn = selFile->Items->Strings[i];
         if (fn.IsEmpty()) continue;
 
-        // extract and format file's extension
-        AnsiString ext = ExtractFileExt(fn).UpperCase();
-        if (ext.IsEmpty()) continue;
-        if (ext[1] == '.') ext.Delete(1,1);
+        // get the file type
+        int typeno = GetFileTypeId(fn);
+        if (typeno < 0) continue;
 
-        // find appropriate file type record
-        TStrings* targ = NULL;
-        int typeno = -1;
-        for (int j = 0; j < NUMITEMS(reg_types); j++) {
-            if (AnsiString(reg_types[j].ext) != ext) continue;
-
-            // record found
-            switch (reg_types[j].appendix) {
-            case 0: targ = main; break;
-            case 1: targ = forms; break;
-            case 2: targ = projf; break;
-            default:
-                ShowMessage("Unknown appendix index "+IntToStr(reg_types[j].appendix));
-                // it's a fatal-type error, we don't care about memory leaks
-                Application->Terminate();
-            }
-
-            typeno = j;
-            break;
+        // record found, select the target list
+        TStrings* targ;
+        switch (reg_types[typeno].appendix) {
+        case 0: targ = main; break;
+        case 1: targ = forms; break;
+        case 2: targ = projf; break;
+        default:
+            ShowMessage("Unknown appendix index "+IntToStr(reg_types[typeno].appendix));
+            // it's a fatal-type error, we don't care about memory leaks
+            Application->Terminate();
+            return;
         }
-        if (!targ || typeno < 0) continue;
 
         // add appropriate file header
         targ->Append("");
@@ -185,9 +176,13 @@ void __fastcall TForm1::Generator(AnsiString prjDir, AnsiString prjName, AnsiStr
         targ->Append("");
 
         // load the file and count the lines
-        tmp->LoadFromFile(prjDir + "\\" + fn);
-        if (reg_types[typeno].appendix == 0)
-            totline += LineCounter(tmp);
+        if (reg_types[typeno].binary)
+            LoadBinary(prjDir + "\\" + fn,tmp);
+        else {
+            tmp->LoadFromFile(prjDir + "\\" + fn);
+            if (reg_types[typeno].appendix == 0)
+                totline += LineCounter(tmp);
+        }
 
         // if requested, obfuscate the contents
         if (CheckBox1->Checked) {
@@ -267,6 +262,25 @@ void __fastcall TForm1::Launchparams1Click(TObject *Sender)
     ShowMessage(ParamStr(0)+" [work_dir] [result_fn] [\"close\"]");
 }
 //---------------------------------------------------------------------------
+int __fastcall TForm1::GetFileTypeId(AnsiString fn)
+{
+    // extract and format file's extension
+    AnsiString ext = ExtractFileExt(fn).UpperCase();
+    if (ext.IsEmpty()) return -1;
+    if (ext[1] == '.') ext.Delete(1,1);
+
+    // find appropriate file type record
+    TStrings* targ = NULL;
+    int typeno = -1;
+    for (int j = 0; j < NUMITEMS(reg_types); j++) {
+        if (AnsiString(reg_types[j].ext) == ext)
+            return j;
+    }
+
+    // nothing found
+    return -1;
+}
+//---------------------------------------------------------------------------
 void __fastcall TForm1::ObfuscatePrepare()
 {
     size_t glen = NUMITEMS(cont_filters) * sizeof(CEOCacheLine);
@@ -338,6 +352,28 @@ int __fastcall TForm1::LineCounter(TStrings* body)
     if (!body) return 0;
     //FIXME: do line counting based on file type (incl. short and long comments)
     return body->Count;
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::LoadBinary(AnsiString fn, TStrings* to)
+{
+    FILE* f = fopen(fn.c_str(),"rb");
+    if (!f) {
+        ShowMessage("Unable to open file "+fn);
+        return;
+    }
+
+    to->Clear();
+    while (!feof(f)) {
+        uint8_t buf[HEXDUMP_LEN];
+        int r = fread(buf,1,sizeof(buf),f);
+        if (!r) break;
+
+        AnsiString s;
+        for (int i = 0; i < r; i++)
+            s += IntToHex(buf[i],2);
+        to->Add(s);
+    }
+    fclose(f);
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::Openmixfile1Click(TObject *Sender)

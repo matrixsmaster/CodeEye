@@ -25,23 +25,25 @@ const CEContentFilter cont_filters[] = {
 struct CEFileType {
     const char* ext;
     const char* desc;
+    bool binary;
     int appendix;
     int filter_id;
 };
 
 const CEFileType reg_types[] = {
-    { "C",   "C Source File", 0, 0 },
-    { "CPP", "C++ Source File", 0, 0 },
-    { "H",   "C/C++ Header", 0, 0 },
-    { "HPP", "C++ Header (HPP)", 0, 0 },
-    { "ASM", "Assembly Code", 0, -1 },
-    { "DFM", "Delphi Form File", 1, 1 },
-    { "XFM", "CLX Form File", 1, 1 },
-    { "BPR", "Borland Project File", 2, -1 },
-    { "RC",  "Resource Script", 2, -1 },
-    { "CLW", "MFC Class Wizard File", 2, -1 },
-    { "DSW", "MS DevStudio Workspace", 2, -1 },
-    { "DSP", "MS DevStudio Project File", 2, -1 },
+    { "C",   "C Source File", false, 0, 0 },
+    { "CPP", "C++ Source File", false, 0, 0 },
+    { "H",   "C/C++ Header", false, 0, 0 },
+    { "HPP", "C++ Header (HPP)", false, 0, 0 },
+    { "ASM", "Assembly Code", false, 0, -1 },
+    { "DFM", "Delphi Form File", false, 1, 1 },
+    { "XFM", "CLX Form File", false, 1, 1 },
+    { "BPR", "Borland Project File", false, 2, -1 },
+    { "RC",  "Resource Script", false, 2, -1 },
+    { "CLW", "MFC Class Wizard File", false, 2, -1 },
+    { "DSW", "MS DevStudio Workspace", false, 2, -1 },
+    { "DSP", "MS DevStudio Project File", false, 2, -1 },
+    { "RES", "Resource file (binary)", true, 2, -1 },
 };
 
 #endif /*FileTypesH*/

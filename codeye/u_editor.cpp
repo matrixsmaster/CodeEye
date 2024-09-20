@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
-
 #include <vcl.h>
+#include <stdio.h>
 #pragma hdrstop
 
 #include "u_editor.h"
@@ -79,18 +79,30 @@ void __fastcall TfrmEdit::Explode(AnsiString dir)
                 in_file = curst.SubString(1,j-1);
                 i++; // skip next empty line
             }
+
         } else {
             if (curst == curst.StringOfChar('-',SPLITTER_LEN)) {
                 // remove trailing newline
                 j = cur->Count - 1;
                 if (cur->Strings[j].IsEmpty()) cur->Delete(j);
+
                 // count lines & files
                 l_cnt += cur->Count;
                 f_cnt++;
-                // save
-                cur->SaveToFile(dir + "\\" + in_file);
+
+                // determine the type (text/bin)
+                int td = Form1->GetFileTypeId(in_file);
+                if (td >= 0 && reg_types[td].binary) {
+                    // save binary file
+                    SaveBinary(dir + "\\" + in_file,cur);
+                } else {
+                    // save text file
+                    cur->SaveToFile(dir + "\\" + in_file);
+                }
+
                 cur->Clear();
                 in_file = "";
+
             } else
                 cur->Append(curst);
         }
@@ -123,17 +135,8 @@ void __fastcall TfrmEdit::Deobfuscate1Click(TObject *Sender)
                 if (j < 2) continue;
                 AnsiString fn = curst.SubString(1,j-1);
 
-                // get file extension
-                AnsiString ext = ExtractFileExt(fn).UpperCase();
-                if (ext.IsEmpty()) continue;
-                if (ext[1] == '.') ext.Delete(1,1);
-
-                // find appropriate file type record
-                tid = -1;
-                for (j = 0; j < NUMITEMS(reg_types) && tid < 0; j++) {
-                    if (AnsiString(reg_types[j].ext) == ext)
-                        tid = j;
-                }
+                // get file type
+                int tid = Form1->GetFileTypeId(fn);
                 if (tid < 0) continue;
 
                 // ready to process
@@ -161,5 +164,24 @@ void __fastcall TfrmEdit::Deobfuscate1Click(TObject *Sender)
 void __fastcall TfrmEdit::Resave1Click(TObject *Sender)
 {
     if (!fileToOpen.IsEmpty()) TXT->Lines->SaveToFile(fileToOpen);
+}
+//---------------------------------------------------------------------------
+void __fastcall TfrmEdit::SaveBinary(AnsiString fn, TStrings* from)
+{
+    if (!from || fn.IsEmpty()) return;
+
+    FILE* f = fopen(fn.c_str(),"wb");
+    if (!f) return;
+
+    for (int i = 0; i < from->Count; i++) {
+        AnsiString s = from->Strings[i];
+        while (s.Length() > 0) {
+            uint8_t b = StrToInt("0x"+s.SubString(1,2));
+            fwrite(&b,1,1,f);
+            s.Delete(1,2);
+        }
+    }
+
+    fclose(f);
 }
 //---------------------------------------------------------------------------

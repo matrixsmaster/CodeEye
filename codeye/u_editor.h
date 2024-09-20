@@ -44,6 +44,7 @@ __published:    // IDE-managed Components
     void __fastcall Resave1Click(TObject *Sender);
 private:    // User declarations
     void __fastcall Explode(AnsiString dir);
+    void __fastcall SaveBinary(AnsiString fn, TStrings* from);
 public:        // User declarations
     AnsiString fileToOpen;
     __fastcall TfrmEdit(TComponent* Owner);
