@@ -136,7 +136,7 @@ void __fastcall TfrmEdit::Deobfuscate1Click(TObject *Sender)
                 AnsiString fn = curst.SubString(1,j-1);
 
                 // get file type
-                int tid = Form1->GetFileTypeId(fn);
+                tid = Form1->GetFileTypeId(fn);
                 if (tid < 0) continue;
 
                 // ready to process
