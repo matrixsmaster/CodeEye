@@ -360,14 +360,16 @@ object AboutBox: TAboutBox
     object Copyright: TLabel
       Left = 8
       Top = 80
-      Width = 254
-      Height = 13
-      Caption = 'Copyright (C) MatrixS_Master (MSM), 2007,2009,2024'
+      Width = 265
+      Height = 33
+      AutoSize = False
+      Caption = 'Copyright (C) MatrixS_Master (MSM) aka sciloaf, 2007,2009,2024'
+      WordWrap = True
       IsControl = True
     end
     object Comments: TLabel
       Left = 8
-      Top = 104
+      Top = 120
       Width = 86
       Height = 13
       Caption = 'All rights reserved.'

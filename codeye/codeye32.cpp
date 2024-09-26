@@ -8,6 +8,7 @@ USEFORM("u_editor.cpp", frmEdit);
 USEFORM("u_about.cpp", AboutBox);
 USEFORM("u_seldest.cpp", frmSelDest);
 USEFORM("u_progress.cpp", frmProgress);
+USEFORM("u_dedit.cpp", frmDEdit);
 //---------------------------------------------------------------------------
 WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -19,6 +20,7 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
          Application->CreateForm(__classid(TAboutBox), &AboutBox);
          Application->CreateForm(__classid(TfrmSelDest), &frmSelDest);
          Application->CreateForm(__classid(TfrmProgress), &frmProgress);
+         Application->CreateForm(__classid(TfrmDEdit), &frmDEdit);
          Application->Run();
     }
     catch (Exception &exception)

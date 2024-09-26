@@ -12,6 +12,7 @@
 #include <Buttons.hpp>
 #include <Dialogs.hpp>
 #include <ComCtrls.hpp>
+#include <IniFiles.hpp>
 #include "u_editor.h"
 #include "lcrng.h"
 //---------------------------------------------------------------------------
@@ -81,6 +82,7 @@ private:    // User declarations
     CEOCacheLine* cache;
     bool once;
     CLCRNG* rng;
+    TIniFile* config;
     void __fastcall Generator(AnsiString prjDir, AnsiString prjName, AnsiString flName);
     void __fastcall OpenWindow(AnsiString fn);
     void __fastcall DestroyWindows();

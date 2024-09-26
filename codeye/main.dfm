@@ -114,7 +114,6 @@ object Form1: TForm1
       Caption = 'Edit'
       object Disclaimer1: TMenuItem
         Caption = 'Disclaimer'
-        Enabled = False
         OnClick = Disclaimer1Click
       end
       object Changelog1: TMenuItem
