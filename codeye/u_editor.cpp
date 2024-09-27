@@ -192,6 +192,29 @@ bool __fastcall ishex(int c)
 {
     return ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F'));
 }
+int __fastcall chrconv(int c)
+{
+    if (c >= 32 && c <= 126)
+        return c - 32;
+    else if (c == '\t')
+        return 96;
+    return 95;
+}
+bool __fastcall ishexmod(int c)
+{
+    if (c > 94) return false;
+    return (ishex(c + 32));
+}
+uint8_t __fastcall hexton(int n)
+{
+    if (n <= '9'-32) return n - ('0'-32);
+    else return n - ('A'-32);
+}
+uint8_t __fastcall hextob(int h, int l)
+{
+    uint8_t r = hexton(h) << 4;
+    return r | hexton(l);
+}
 //---------------------------------------------------------------------------
 void __fastcall TfrmEdit::Savecompressed1Click(TObject *Sender)
 {
@@ -236,16 +259,16 @@ void __fastcall TfrmEdit::Savecompressed1Click(TObject *Sender)
     // take highest scores and populate final word map
     std::map<AnsiString,int> wmap;
     std::multimap<int,AnsiString>::iterator rit = revmap.end();
-    for (int i = 0; i < 286 && i < revmap.size(); i++) {
+    for (unsigned i = 0; i < 286 && i < revmap.size(); i++) {
         --rit;
         //ShowMessage(rit->second+" : "+IntToStr(rit->first));
         wmap[rit->second] = i;
     }
     revmap.clear();
 
-    std::vector<uint8_t> out;
+    std::vector<uint8_t> nowd;
     for (int i = 0; i < TXT->Lines->Count; i++) {
-        AnsiString s = TXT->Lines->Strings[i];
+        AnsiString s = TXT->Lines->Strings[i] + "\n";
         int fsm = 0, hex = 0;
         AnsiString acc;
         for (int j = 1; j <= s.Length(); j++) {
@@ -254,18 +277,19 @@ void __fastcall TfrmEdit::Savecompressed1Click(TObject *Sender)
                 if (isalnum(s[j])) fsm = 1;
                 break;
             case 1:
-                if (!isalnum(s[j]) || (acc.Length() == hex && hex == 64 * 2)) {
-                    if (acc.Length() == hex && hex > 4) {
-                        out.push_back(0xC0 | hex);
-                        while (!acc.IsEmpty()) {
-                            unsigned b = 0;
-                            sscanf(acc.c_str(),"%2X",&b);
-                            out.push_back(b);
-                            acc.Delete(1,2);
+                if (!isalnum(s[j])) {
+                    if (acc.Length() > 2 && acc.Length() > hex && wmap.count(acc)) {
+                        int p = wmap[acc];
+                        if (p < 30) { // tier 1
+                            nowd.push_back(p + 97);
+                        } else { // tier 2
+                            nowd.push_back(127);
+                            nowd.push_back(p - 30);
                         }
+                    } else {
+                        for (int k = 1; k <= acc.Length(); k++)
+                            nowd.push_back(chrconv(acc[k]));
                     }
-                    //if (acc.Length() > 2 && acc.Length() > hex)
-                    //    dict[acc]++;
                     fsm = 0;
                     hex = 0;
                     acc = "";
@@ -275,19 +299,68 @@ void __fastcall TfrmEdit::Savecompressed1Click(TObject *Sender)
             if (fsm) {
                 acc += s[j];
                 if (ishex(s[j])) hex++;
+            } else
+                nowd.push_back(chrconv(s[j]));
+        }
+        //nowd.push_back(95);
+    }
+    wmap.clear();
+
+    FILE* tst = fopen("test-nowd.bin","wb");
+    if (tst) {
+        fwrite(&(nowd[0]),nowd.size(),1,tst);
+        fclose(tst);
+    }
+
+    std::vector<uint8_t> rle;
+    uint8_t prev = 0xFF;
+    int rlecnt = 0;
+    for (unsigned i = 0; i < nowd.size(); i++) {
+        if (nowd[i] < 127 && nowd[i] == prev && rlecnt < 64) rlecnt++;
+        else {
+            if (rlecnt > 2) {
+                rle.push_back(0x80 | rlecnt);
+                rlecnt = 1;
             }
+            for (int k = 0; k < rlecnt; k++)
+                rle.push_back(prev);
+
+            rlecnt = 1;
+            prev = nowd[i];
         }
     }
 
-    /*
-                if (s[j] == prev && rle < 64) rle++;
-            else {
-                if (rle > 2) {
-                    out.push_back(0x80 | rle);
-                    out.push_back(chrconv(prev));
-                }
-            }
+    tst = fopen("test-rle.bin","wb");
+    if (tst) {
+        fwrite(&(rle[0]),rle.size(),1,tst);
+        fclose(tst);
+    }
 
-            */
+    std::vector<uint8_t> out;
+    int hex = 0;
+    unsigned hpos = 0;
+    for (unsigned i = 0; i < rle.size(); i++) {
+        if (ishexmod(rle[i]) && hex < 64*2) hex++;
+        else {
+            if (hex > 4 && hex % 2 == 0) {
+                hex /= 2;
+                out.push_back(0xC0 | hex);
+                for (int j = 0; j < hex; j++)
+                    out.push_back(hextob(rle[hpos+j*2],rle[hpos+j*2+1]));
+            } else {
+                for (unsigned j = hpos; j < i; j++)
+                    out.push_back(rle[j]);
+            }
+            hex = 0;
+            hpos = i;
+        }
+    }
+
+    tst = fopen("test-out.bin","wb");
+    if (tst) {
+        fwrite(&(out[0]),out.size(),1,tst);
+        fclose(tst);
+    }
+    ShowMessage("Done");
 }
 //---------------------------------------------------------------------------
