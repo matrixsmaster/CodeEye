@@ -1,6 +1,8 @@
 //---------------------------------------------------------------------------
 #include <vcl.h>
 #include <stdio.h>
+#include <stdint.h>
+#include <vector>
 #include <map>
 #pragma hdrstop
 
@@ -193,8 +195,8 @@ bool __fastcall ishex(int c)
 //---------------------------------------------------------------------------
 void __fastcall TfrmEdit::Savecompressed1Click(TObject *Sender)
 {
+    // create base dictionary
     std::map<AnsiString,int> dict;
-
     for (int i = 0; i < TXT->Lines->Count; i++) {
         AnsiString s = TXT->Lines->Strings[i];
         int fsm = 0, hex = 0;
@@ -221,18 +223,71 @@ void __fastcall TfrmEdit::Savecompressed1Click(TObject *Sender)
         }
     }
 
+    // calculate scores and sort by highest score
     std::multimap<int,AnsiString> revmap;
     for (std::map<AnsiString,int>::iterator it = dict.begin(); it != dict.end(); ++it) {
         int len = it->first.Length();
         int score = ((len - 1) * it->second) - len;
-        revmap.insert(std::pair<int,AnsiString>(score,it->first));
+        if (score > 1)
+            revmap.insert(std::pair<int,AnsiString>(score,it->first));
+    }
+    dict.clear();
+
+    // take highest scores and populate final word map
+    std::map<AnsiString,int> wmap;
+    std::multimap<int,AnsiString>::iterator rit = revmap.end();
+    for (int i = 0; i < 286 && i < revmap.size(); i++) {
+        --rit;
+        //ShowMessage(rit->second+" : "+IntToStr(rit->first));
+        wmap[rit->second] = i;
+    }
+    revmap.clear();
+
+    std::vector<uint8_t> out;
+    for (int i = 0; i < TXT->Lines->Count; i++) {
+        AnsiString s = TXT->Lines->Strings[i];
+        int fsm = 0, hex = 0;
+        AnsiString acc;
+        for (int j = 1; j <= s.Length(); j++) {
+            switch (fsm) {
+            case 0:
+                if (isalnum(s[j])) fsm = 1;
+                break;
+            case 1:
+                if (!isalnum(s[j]) || (acc.Length() == hex && hex == 64 * 2)) {
+                    if (acc.Length() == hex && hex > 4) {
+                        out.push_back(0xC0 | hex);
+                        while (!acc.IsEmpty()) {
+                            unsigned b = 0;
+                            sscanf(acc.c_str(),"%2X",&b);
+                            out.push_back(b);
+                            acc.Delete(1,2);
+                        }
+                    }
+                    //if (acc.Length() > 2 && acc.Length() > hex)
+                    //    dict[acc]++;
+                    fsm = 0;
+                    hex = 0;
+                    acc = "";
+                }
+                break;
+            }
+            if (fsm) {
+                acc += s[j];
+                if (ishex(s[j])) hex++;
+            }
+        }
     }
 
-    ShowMessage(IntToStr(revmap.size()));
-    std::multimap<int,AnsiString>::iterator rit = revmap.end();
-    for (int i = 0; i < 10 && i < revmap.size(); i++) {
-        --rit;
-        ShowMessage(rit->second+" : "+IntToStr(rit->first));
-    }
+    /*
+                if (s[j] == prev && rle < 64) rle++;
+            else {
+                if (rle > 2) {
+                    out.push_back(0x80 | rle);
+                    out.push_back(chrconv(prev));
+                }
+            }
+
+            */
 }
 //---------------------------------------------------------------------------
