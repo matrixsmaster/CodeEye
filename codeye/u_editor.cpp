@@ -1,6 +1,7 @@
 //---------------------------------------------------------------------------
 #include <vcl.h>
 #include <stdio.h>
+#include <map>
 #pragma hdrstop
 
 #include "u_editor.h"
@@ -183,5 +184,55 @@ void __fastcall TfrmEdit::SaveBinary(AnsiString fn, TStrings* from)
     }
 
     fclose(f);
+}
+//---------------------------------------------------------------------------
+bool __fastcall ishex(int c)
+{
+    return ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F'));
+}
+//---------------------------------------------------------------------------
+void __fastcall TfrmEdit::Savecompressed1Click(TObject *Sender)
+{
+    std::map<AnsiString,int> dict;
+
+    for (int i = 0; i < TXT->Lines->Count; i++) {
+        AnsiString s = TXT->Lines->Strings[i];
+        int fsm = 0, hex = 0;
+        AnsiString acc;
+        for (int j = 1; j <= s.Length(); j++) {
+            switch (fsm) {
+            case 0:
+                if (isalnum(s[j])) fsm = 1;
+                break;
+            case 1:
+                if (!isalnum(s[j])) {
+                    if (acc.Length() > 2 && acc.Length() > hex)
+                        dict[acc]++;
+                    fsm = 0;
+                    hex = 0;
+                    acc = "";
+                }
+                break;
+            }
+            if (fsm) {
+                acc += s[j];
+                if (ishex(s[j])) hex++;
+            }
+        }
+    }
+
+    std::multimap<int,AnsiString> revmap;
+    for (std::map<AnsiString,int>::iterator it = dict.begin(); it != dict.end(); ++it) {
+        int len = it->first.Length();
+        int score = ((len - 1) * it->second) - len;
+        revmap.insert(std::pair<int,AnsiString>(score,it->first));
+    }
+
+    ShowMessage(IntToStr(revmap.size()));
+    std::multimap<int,AnsiString>::iterator rit = revmap.end();
+    for (int i = 0; i < 10 && i < revmap.size(); i++) {
+        --rit;
+        ShowMessage(rit->second+" : "+IntToStr(rit->first));
+    }
 }
 //---------------------------------------------------------------------------

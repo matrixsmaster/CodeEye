@@ -11,6 +11,11 @@
 #include <Menus.hpp>
 #include "lcrng.h"
 //---------------------------------------------------------------------------
+//struct MDictItem {
+//    AnsiString s;
+//    int cnt;
+//};
+//---------------------------------------------------------------------------
 class TfrmEdit : public TForm
 {
 __published:    // IDE-managed Components
@@ -33,6 +38,7 @@ __published:    // IDE-managed Components
     TMenuItem *N1;
     TMenuItem *N2;
     TMenuItem *N3;
+    TMenuItem *Savecompressed1;
     void __fastcall Font1Click(TObject *Sender);
     void __fastcall Background1Click(TObject *Sender);
     void __fastcall FormShow(TObject *Sender);
@@ -42,6 +48,7 @@ __published:    // IDE-managed Components
     void __fastcall Explode1Click(TObject *Sender);
     void __fastcall Deobfuscate1Click(TObject *Sender);
     void __fastcall Resave1Click(TObject *Sender);
+    void __fastcall Savecompressed1Click(TObject *Sender);
 private:    // User declarations
     void __fastcall Explode(AnsiString dir);
     void __fastcall SaveBinary(AnsiString fn, TStrings* from);

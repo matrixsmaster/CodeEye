@@ -54,6 +54,10 @@ object frmEdit: TfrmEdit
         Caption = 'Save as...'
         Enabled = False
       end
+      object Savecompressed1: TMenuItem
+        Caption = 'Save compressed'
+        OnClick = Savecompressed1Click
+      end
       object N2: TMenuItem
         Caption = '-'
       end
