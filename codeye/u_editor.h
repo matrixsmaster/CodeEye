@@ -11,6 +11,8 @@
 #include <Menus.hpp>
 #include "lcrng.h"
 //---------------------------------------------------------------------------
+#define MAX_FILE_SIZE 64*1024*1024
+//---------------------------------------------------------------------------
 class TfrmEdit : public TForm
 {
 __published:    // IDE-managed Components
@@ -34,6 +36,10 @@ __published:    // IDE-managed Components
     TMenuItem *N2;
     TMenuItem *N3;
     TMenuItem *Savecompressed1;
+    TMenuItem *Loadcompressed1;
+    TMenuItem *N4;
+    TOpenDialog *od1;
+    TSaveDialog *sd1;
     void __fastcall Font1Click(TObject *Sender);
     void __fastcall Background1Click(TObject *Sender);
     void __fastcall FormShow(TObject *Sender);
@@ -44,6 +50,7 @@ __published:    // IDE-managed Components
     void __fastcall Deobfuscate1Click(TObject *Sender);
     void __fastcall Resave1Click(TObject *Sender);
     void __fastcall Savecompressed1Click(TObject *Sender);
+    void __fastcall Loadcompressed1Click(TObject *Sender);
 private:    // User declarations
     void __fastcall Explode(AnsiString dir);
     void __fastcall SaveBinary(AnsiString fn, TStrings* from);

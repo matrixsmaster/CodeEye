@@ -54,6 +54,13 @@ object frmEdit: TfrmEdit
         Caption = 'Save as...'
         Enabled = False
       end
+      object N4: TMenuItem
+        Caption = '-'
+      end
+      object Loadcompressed1: TMenuItem
+        Caption = 'Load compressed'
+        OnClick = Loadcompressed1Click
+      end
       object Savecompressed1: TMenuItem
         Caption = 'Save compressed'
         OnClick = Savecompressed1Click
@@ -114,5 +121,19 @@ object frmEdit: TfrmEdit
     Ctl3D = True
     Left = 88
     Top = 16
+  end
+  object od1: TOpenDialog
+    DefaultExt = 'bin'
+    Filter = 'Binary files (*.bin)|*.bin|All files|*.*'
+    Title = 'Open compressed data file'
+    Left = 8
+    Top = 56
+  end
+  object sd1: TSaveDialog
+    DefaultExt = 'bin'
+    Filter = 'Binary files (*.bin)|*.bin'
+    Title = 'Save compressed data'
+    Left = 48
+    Top = 56
   end
 end

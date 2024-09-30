@@ -10,6 +10,7 @@
 #include "u_seldest.h"
 #include "file_types.h"
 #include "main.h"
+#include "zipper.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -190,6 +191,105 @@ void __fastcall TfrmEdit::SaveBinary(AnsiString fn, TStrings* from)
 //---------------------------------------------------------------------------
 void __fastcall TfrmEdit::Savecompressed1Click(TObject *Sender)
 {
-    // TODO
+    if (!sd1->Execute() || sd1->FileName.IsEmpty()) return;
+
+    // prepare buffers
+    AnsiString txt = TXT->Text;
+    size_t mem = zipr_bound(txt.Length());
+    uint8_t* buf = (uint8_t*)malloc(mem);
+    if (!buf) {
+        ShowMessage("Out of memory (buf)!");
+        return;
+    }
+
+    // prepare compressor state (it's too big to fit onto stack)
+    zipr* state = (zipr*)malloc(sizeof(zipr));
+    if (!state) {
+        ShowMessage("Out of memory (state)!");
+        return;
+    }
+    memset(state,0,sizeof(zipr));
+
+    // run Deflate algorithm
+    int r = zipr_deflate(state,buf,txt.c_str(),txt.Length(),ZIPR_LVL_MAX);
+    free(state);
+
+    if (!r) {
+        ShowMessage("Error while compressing data");
+        free(buf);
+        return;
+    }
+
+    // save result into the output file
+    FILE* f = fopen(sd1->FileName.c_str(),"wb");
+    if (f) {
+        uint32_t l = txt.Length();
+        fwrite(&l,4,1,f);   // first 4 bytes - original length
+        fwrite(buf,r,1,f);  // the rest - compressed bitstream
+        fclose(f);
+        ShowMessage("Done!");
+    } else
+        ShowMessage("Error: unable to save file");
+
+    free(buf);
+}
+//---------------------------------------------------------------------------
+void __fastcall TfrmEdit::Loadcompressed1Click(TObject *Sender)
+{
+    if (!od1->Execute() || od1->FileName.IsEmpty()) return;
+
+    // open file and calculate its size
+    FILE* f = fopen(od1->FileName.c_str(),"rb");
+    if (!f) {
+        ShowMessage("Error: unable to open file");
+        return;
+    }
+
+    fseek(f,0,SEEK_END);
+    size_t sz = ftell(f);
+    fseek(f,0,SEEK_SET);
+
+    if (!sz || sz > MAX_FILE_SIZE) {
+        ShowMessage("Error: File is too large!");
+        fclose(f);
+        return;
+    }
+
+    // prepare and read in the buffer
+    uint8_t* buf = (uint8_t*)malloc(sz);
+    if (!buf) {
+        ShowMessage("Out of memory (buf)!");
+        fclose(f);
+        return;
+    }
+
+    int r = fread(buf,sz,1,f);
+    fclose(f);
+
+    if (!r) {
+        ShowMessage("Error: Unable to read all bytes");
+        free(buf);
+        return;
+    }
+
+    // take the length field and prepare the result buffer
+    uint32_t outl = *(uint32_t*)buf;
+    if (!outl || outl > MAX_FILE_SIZE) {
+        ShowMessage("Error: Uncompressed size is too large");
+        free(buf);
+        return;
+    }
+    AnsiString txt;
+    txt.SetLength(outl);
+
+    // run Inflate
+    unzipr s;
+    memset(&s,0,sizeof(s));
+    zipr_inflate(txt.c_str(),buf+4,sz-4);
+
+    // update the text view
+    TXT->Clear();
+    TXT->Text = txt;
+    Caption = ExtractFileName(od1->FileName);
 }
 //---------------------------------------------------------------------------
