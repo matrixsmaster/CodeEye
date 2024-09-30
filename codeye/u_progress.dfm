@@ -1,6 +1,6 @@
 object frmProgress: TfrmProgress
-  Left = 248
-  Top = 111
+  Left = 492
+  Top = 113
   BorderIcons = []
   BorderStyle = bsSingle
   Caption = 'Progress'

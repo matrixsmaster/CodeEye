@@ -68,9 +68,7 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
     dPath = ExtractFilePath(Application->ExeName);
     rng = new CLCRNG();
 
-    ShowMessage(Application->ExeName);
-    ShowMessage(ChangeFileExt(Application->ExeName,'.INI'));
-    config = new TIniFile(ChangeFileExt(Application->ExeName,'.ini'));
+    config = new TIniFile(ChangeFileExt(Application->ExeName,".ini"));
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::FormDestroy(TObject *Sender)
@@ -138,7 +136,7 @@ void __fastcall TForm1::Generator(AnsiString prjDir, AnsiString prjName, AnsiStr
     TStrings* projf = new TStringList();
     TStrings* tmp = new TStringList();
     AnsiString splitter;
-    splitter = splitter.StringOfChar('-',SPLITTER_LEN);
+    splitter = splitter.StringOfChar(SPLITTER_CHAR,SPLITTER_LEN);
 
     // add global header
     main->Append(DateToStr(Date())+'@'+TimeToStr(Time()));
@@ -155,6 +153,16 @@ void __fastcall TForm1::Generator(AnsiString prjDir, AnsiString prjName, AnsiStr
         for (int i = 0; i < dlines; i++)
             main->Append(config->ReadString("Disclaimer","Line"+IntToStr(i),""));
     }
+
+    // add changelog
+    int dlines = config->ReadInteger("Changelog","nLines",0);
+    if (dlines) {
+        main->Append("");
+        main->Append("CHANGELOG:");
+    }
+    for (int i = 0; i < dlines; i++)
+        main->Append(config->ReadString("Changelog","Line"+IntToStr(i),""));
+    if (dlines) main->Append("");
 
     // process all files
     for (int i=0; i<selFile->Items->Count; i++) {
@@ -394,16 +402,36 @@ void __fastcall TForm1::Openmixfile1Click(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TForm1::Disclaimer1Click(TObject *Sender)
 {
-    frmDEdit->Memo1->Clear();
-    int dlines = config->ReadInteger("Disclaimer","nLines",0);
+    LoadIniText("Disclaimer",frmDEdit->Memo1->Lines);
+    if (frmDEdit->ShowModal() == mrOk)
+        SaveIniText("Disclaimer",frmDEdit->Memo1->Lines);
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::Changelog1Click(TObject *Sender)
+{
+    LoadIniText("Changelog",frmDEdit->Memo1->Lines);
+    if (frmDEdit->ShowModal() == mrOk)
+        SaveIniText("Changelog",frmDEdit->Memo1->Lines);
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::LoadIniText(AnsiString sect, TStrings* to)
+{
+    to->Clear();
+    int dlines = config->ReadInteger(sect,"nLines",0);
     for (int i = 0; i < dlines; i++)
-        frmDEdit->Memo1->Lines->Add(config->ReadString("Disclaimer","Line"+IntToStr(i),""));
-
-    if (frmDEdit->ShowModal() == mrOk) {
-        dlines = frmDEdit->Memo1->Lines->Count;
-        config->WriteInteger("Disclaimer","nLines",dlines);
-        for (int i = 0; i < dlines; i++)
-            config->WriteString("Disclaimer","Line"+IntToStr(i),frmDEdit->Memo1->Lines->Strings[i]);
+        to->Add(config->ReadString(sect,"Line"+IntToStr(i),""));
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::SaveIniText(AnsiString sect, TStrings* txt)
+{
+    int dlines = txt->Count;
+    AnsiString split;
+    split = split.StringOfChar(SPLITTER_CHAR,SPLITTER_LEN);
+    config->WriteInteger(sect,"nLines",dlines);
+    for (int i = 0; i < dlines; i++) {
+        AnsiString s = txt->Strings[i];
+        if (s == split) s.Delete(1,1); // don't allow lines looking exactly as the splitter line
+        config->WriteString(sect,"Line"+IntToStr(i),s);
     }
 }
 //---------------------------------------------------------------------------

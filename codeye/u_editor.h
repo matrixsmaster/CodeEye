@@ -11,11 +11,6 @@
 #include <Menus.hpp>
 #include "lcrng.h"
 //---------------------------------------------------------------------------
-//struct MDictItem {
-//    AnsiString s;
-//    int cnt;
-//};
-//---------------------------------------------------------------------------
 class TfrmEdit : public TForm
 {
 __published:    // IDE-managed Components

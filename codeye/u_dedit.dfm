@@ -1,6 +1,6 @@
 object frmDEdit: TfrmDEdit
-  Left = 568
-  Top = 112
+  Left = 570
+  Top = 115
   Width = 365
   Height = 229
   Caption = 'Enter text'

@@ -1,6 +1,6 @@
 object frmSelDest: TfrmSelDest
-  Left = 293
-  Top = 109
+  Left = 445
+  Top = 114
   Width = 531
   Height = 296
   BorderIcons = [biSystemMenu, biMaximize]

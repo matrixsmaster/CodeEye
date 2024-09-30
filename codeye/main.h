@@ -19,6 +19,7 @@
 #define MIXPROJ_PREFIX "MixProj_"
 #define MIXPROJ_SUFFIX ".txt"
 #define MIXPROJ_HEADER "MSM's Code Eye Project Mix File"
+#define SPLITTER_CHAR '-'
 #define SPLITTER_LEN 65
 #define CHAPTERSPLIT_LEN 80
 #define HEXDUMP_LEN 16
@@ -75,6 +76,7 @@ __published:    // IDE-managed Components
     void __fastcall DriveComboBox1Change(TObject *Sender);
     void __fastcall Openmixfile1Click(TObject *Sender);
     void __fastcall Disclaimer1Click(TObject *Sender);
+    void __fastcall Changelog1Click(TObject *Sender);
 private:    // User declarations
     AnsiString curFile;
     AnsiString dPath;
@@ -89,6 +91,8 @@ private:    // User declarations
     void __fastcall ObfuscatePrepare();
     int __fastcall LineCounter(TStrings* body);
     void __fastcall LoadBinary(AnsiString fn, TStrings* to);
+    void __fastcall LoadIniText(AnsiString sect, TStrings* to);
+    void __fastcall SaveIniText(AnsiString sect, TStrings* txt);
 public:        // User declarations
     __fastcall TForm1(TComponent* Owner);
     int __fastcall GetFileTypeId(AnsiString fn);

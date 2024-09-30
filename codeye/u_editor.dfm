@@ -1,6 +1,6 @@
 object frmEdit: TfrmEdit
-  Left = 361
-  Top = 110
+  Left = 365
+  Top = 113
   Width = 508
   Height = 351
   Caption = 'view'

@@ -1,6 +1,6 @@
 object Form1: TForm1
-  Left = 189
-  Top = 107
+  Left = 190
+  Top = 111
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'MSM'#39's Code Eye'
@@ -118,7 +118,7 @@ object Form1: TForm1
       end
       object Changelog1: TMenuItem
         Caption = 'Changelog'
-        Enabled = False
+        OnClick = Changelog1Click
       end
     end
     object Window1: TMenuItem
