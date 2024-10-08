@@ -40,6 +40,8 @@ __published:    // IDE-managed Components
     TMenuItem *N4;
     TOpenDialog *od1;
     TSaveDialog *sd1;
+    TMenuItem *ApplyROFL1;
+    TMenuItem *Reload1;
     void __fastcall Font1Click(TObject *Sender);
     void __fastcall Background1Click(TObject *Sender);
     void __fastcall FormShow(TObject *Sender);
@@ -51,7 +53,10 @@ __published:    // IDE-managed Components
     void __fastcall Resave1Click(TObject *Sender);
     void __fastcall Savecompressed1Click(TObject *Sender);
     void __fastcall Loadcompressed1Click(TObject *Sender);
+    void __fastcall ApplyROFL1Click(TObject *Sender);
+    void __fastcall Reload1Click(TObject *Sender);
 private:    // User declarations
+    AnsiString last_pass;
     void __fastcall Explode(AnsiString dir);
     void __fastcall SaveBinary(AnsiString fn, TStrings* from);
 public:        // User declarations

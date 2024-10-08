@@ -293,3 +293,53 @@ void __fastcall TfrmEdit::Loadcompressed1Click(TObject *Sender)
     Caption = ExtractFileName(od1->FileName);
 }
 //---------------------------------------------------------------------------
+static bool __fastcall valid_char(int c)
+{
+    if (isspace(c)) return false;
+    if (c <= 32) return false;
+    if (c == 127) return false;
+    return true;
+}
+//---------------------------------------------------------------------------
+void __fastcall TfrmEdit::ApplyROFL1Click(TObject *Sender)
+{
+    // Rotary ObFuscation Layer
+    AnsiString pass = InputBox("Rotary ObFuscation Layer","Enter passphrase",last_pass);
+    if (pass.IsEmpty()) return;
+    last_pass = pass;
+
+    CLCRNG rng;
+    rng.setSeed(pass.c_str());
+
+    // copy text to avoid updating the widget
+    TStrings* res = new TStringList();
+    res->AddStrings(TXT->Lines);
+
+    // process all lines
+    AnsiString cpas = pass;
+    for (int i = 0, k = pass.Length()+1; i < res->Count; i++) {
+        AnsiString ln = res->Strings[i];
+        for (int j = 1; j <= ln.Length(); j++) {
+            if (!valid_char(ln[j])) continue;
+            if (k > pass.Length()) {
+                k = 1;
+                for (int q = 1; q <= pass.Length(); q++)
+                    cpas[q] += (rng.getDWord() & 0xFF);
+            }
+            char n = ln[j] ^ cpas[k++];
+            if (valid_char(n)) ln[j] = n;
+        }
+        res->Strings[i] = ln;
+    }
+
+    // update the text
+    TXT->Clear();
+    TXT->Lines->AddStrings(res);
+}
+//---------------------------------------------------------------------------
+void __fastcall TfrmEdit::Reload1Click(TObject *Sender)
+{
+    if (FileExists(fileToOpen))
+        TXT->Lines->LoadFromFile(fileToOpen);
+}
+//---------------------------------------------------------------------------

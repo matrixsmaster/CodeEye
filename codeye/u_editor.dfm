@@ -45,6 +45,10 @@ object frmEdit: TfrmEdit
       object N1: TMenuItem
         Caption = '-'
       end
+      object Reload1: TMenuItem
+        Caption = 'Reload'
+        OnClick = Reload1Click
+      end
       object Resave1: TMenuItem
         Caption = 'Resave'
         ShortCut = 16467
@@ -80,6 +84,10 @@ object frmEdit: TfrmEdit
         Caption = 'Deobfuscate'
         ShortCut = 115
         OnClick = Deobfuscate1Click
+      end
+      object ApplyROFL1: TMenuItem
+        Caption = 'Apply ROFL'
+        OnClick = ApplyROFL1Click
       end
       object N3: TMenuItem
         Caption = '-'
