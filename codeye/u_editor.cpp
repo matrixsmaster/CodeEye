@@ -293,17 +293,15 @@ void __fastcall TfrmEdit::Loadcompressed1Click(TObject *Sender)
     Caption = ExtractFileName(od1->FileName);
 }
 //---------------------------------------------------------------------------
-static bool __fastcall valid_char(int c)
+static bool __fastcall valid_char(uint8_t c)
 {
-    if (isspace(c)) return false;
     if (c <= 32) return false;
     if (c == 127) return false;
     return true;
 }
 //---------------------------------------------------------------------------
-void __fastcall TfrmEdit::ApplyROFL1Click(TObject *Sender)
+void __fastcall TfrmEdit::ROFL(bool encode)
 {
-    // Rotary ObFuscation Layer
     AnsiString pass = InputBox("Rotary ObFuscation Layer","Enter passphrase",last_pass);
     if (pass.IsEmpty()) return;
     last_pass = pass;
@@ -320,14 +318,26 @@ void __fastcall TfrmEdit::ApplyROFL1Click(TObject *Sender)
     for (int i = 0, k = pass.Length()+1; i < res->Count; i++) {
         AnsiString ln = res->Strings[i];
         for (int j = 1; j <= ln.Length(); j++) {
-            if (!valid_char(ln[j])) continue;
+            uint8_t n = ln[j];
+            if (!valid_char(n)) continue;
             if (k > pass.Length()) {
                 k = 1;
                 for (int q = 1; q <= pass.Length(); q++)
-                    cpas[q] += (rng.getDWord() & 0xFF);
+                    cpas[q] ^= (rng.getDWord() & 0x7F);
             }
-            char n = ln[j] ^ cpas[k++];
-            if (valid_char(n)) ln[j] = n;
+            if (encode) {
+                do
+                n += (uint8_t)cpas[k];
+                while (!valid_char(n));
+            } else {
+                do
+                n -= (uint8_t)cpas[k];
+                while (!valid_char(n));
+            }
+            ln[j] = n;
+            k++;
+            //ln[j] ^ cpas[k++];
+            //if (valid_char(n)) ln[j] = n;
         }
         res->Strings[i] = ln;
     }
@@ -341,5 +351,15 @@ void __fastcall TfrmEdit::Reload1Click(TObject *Sender)
 {
     if (FileExists(fileToOpen))
         TXT->Lines->LoadFromFile(fileToOpen);
+}
+//---------------------------------------------------------------------------
+void __fastcall TfrmEdit::ApplyROFL1Click(TObject *Sender)
+{
+    ROFL(true);
+}
+//---------------------------------------------------------------------------
+void __fastcall TfrmEdit::RemoveROFL1Click(TObject *Sender)
+{
+    ROFL(false);
 }
 //---------------------------------------------------------------------------

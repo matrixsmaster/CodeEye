@@ -89,6 +89,10 @@ object frmEdit: TfrmEdit
         Caption = 'Apply ROFL'
         OnClick = ApplyROFL1Click
       end
+      object RemoveROFL1: TMenuItem
+        Caption = 'Remove ROFL'
+        OnClick = RemoveROFL1Click
+      end
       object N3: TMenuItem
         Caption = '-'
       end

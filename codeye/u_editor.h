@@ -42,6 +42,7 @@ __published:    // IDE-managed Components
     TSaveDialog *sd1;
     TMenuItem *ApplyROFL1;
     TMenuItem *Reload1;
+    TMenuItem *RemoveROFL1;
     void __fastcall Font1Click(TObject *Sender);
     void __fastcall Background1Click(TObject *Sender);
     void __fastcall FormShow(TObject *Sender);
@@ -55,10 +56,12 @@ __published:    // IDE-managed Components
     void __fastcall Loadcompressed1Click(TObject *Sender);
     void __fastcall ApplyROFL1Click(TObject *Sender);
     void __fastcall Reload1Click(TObject *Sender);
+    void __fastcall RemoveROFL1Click(TObject *Sender);
 private:    // User declarations
     AnsiString last_pass;
     void __fastcall Explode(AnsiString dir);
     void __fastcall SaveBinary(AnsiString fn, TStrings* from);
+    void __fastcall ROFL(bool encode); // Rotary ObFuscation Layer :)
 public:        // User declarations
     AnsiString fileToOpen;
     __fastcall TfrmEdit(TComponent* Owner);
