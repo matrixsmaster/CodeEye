@@ -24,7 +24,7 @@
     <DEBUGLIBPATH value="$(BCB)\lib\debug"/>
     <RELEASELIBPATH value="$(BCB)\lib\release"/>
     <LINKER value="ilink32"/>
-    <USERDEFINES value="_DEBUG"/>
+    <USERDEFINES value=""/>
     <SYSDEFINES value="NO_STRICT"/>
     <MAINSOURCE value="codeye32.cpp"/>
     <INCLUDEPATH value="&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;..;codeye;$(BCB)\include;$(BCB)\include\vcl"/>
@@ -34,13 +34,12 @@
   </MACROS>
   <OPTIONS>
     <IDLCFLAGS value="-I&quot;C:\Program Files\Borland\CBuilder6\Projects&quot; -I.. -Icodeye 
-      -I$(BCB)\include -I$(BCB)\include\vcl -src_suffix cpp -D_DEBUG -boa"/>
-    <CFLAG1 value="-Od -H=$(BCB)\lib\vcl60.csm -Hc -Vx -Ve -X- -r- -a8 -5 -b- -k -y -v -vi- 
-      -c -tW -tWM"/>
-    <PFLAGS value="-$Y+ -$W -$O- -$A8 -v -JPHNE -M"/>
+      -I$(BCB)\include -I$(BCB)\include\vcl -src_suffix cpp -boa"/>
+    <CFLAG1 value="-O2 -H=$(BCB)\lib\vcl60.csm -Hc -Vx -Ve -X- -a8 -5 -b- -k- -vi -c -tW -tWM"/>
+    <PFLAGS value="-$Y- -$L- -$D- -$A8 -v -JPHNE -M"/>
     <RFLAGS value=""/>
-    <AFLAGS value="/mx /w2 /zi"/>
-    <LFLAGS value="-D&quot;&quot; -aa -Tpe -x -Gn -v"/>
+    <AFLAGS value="/mx /w2 /zn"/>
+    <LFLAGS value="-D&quot;&quot; -aa -Tpe -x -Gn"/>
     <OTHERFILES value=""/>
   </OPTIONS>
   <LINKER>
@@ -69,9 +68,9 @@
 IncludeVerInfo=1
 AutoIncBuild=0
 MajorVer=2
-MinorVer=0
-Release=5
-Build=93
+MinorVer=1
+Release=0
+Build=96
 Debug=0
 PreRelease=0
 Special=0
@@ -82,15 +81,15 @@ CodePage=1252
 
 [Version Info Keys]
 CompanyName=MatrixS_Master
-FileDescription=Code Eye Cpp
-FileVersion=2.0.5.93
-InternalName=CodeEye
+FileDescription=Code Eye 2
+FileVersion=2.1.0.96
+InternalName=CodeEye2
 LegalCopyright=
 LegalTrademarks=
 OriginalFilename=codeye32.exe
 ProductName=CodeEye
 ProductVersion=2.0
-Comments=CodeEye C++ Edition
+Comments=C++ and Delphi Edition
 
 [HistoryLists\hlIncludePath]
 Count=2

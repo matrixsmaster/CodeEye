@@ -344,9 +344,9 @@ object AboutBox: TAboutBox
     object ProductName: TLabel
       Left = 88
       Top = 16
-      Width = 144
+      Width = 81
       Height = 13
-      Caption = 'MSM'#39's Code Eye (C++ Edition)'
+      Caption = 'MSM'#39's Code Eye'
       IsControl = True
     end
     object Version: TLabel
@@ -354,7 +354,7 @@ object AboutBox: TAboutBox
       Top = 40
       Width = 62
       Height = 13
-      Caption = 'Version 2.0.5'
+      Caption = 'Version 2.1.0'
       IsControl = True
     end
     object Copyright: TLabel

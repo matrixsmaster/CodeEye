@@ -9,17 +9,17 @@ struct CEContentFilter {
 };
 
 const CEContentFilter cont_filters[] = {
-    {
+    { /* Regular C/C++ stuff */
         "0123456789",
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
         "abcdefghijklmnopqrstuvwxyz",
         "<>!@$%^&+-|",
         NULL
     },
-    {
+    { /* HEX stuff */
         "0123456789ABCDEF",
         NULL, NULL, NULL, NULL
-    }
+    },
 };
 
 struct CEFileType {
@@ -36,6 +36,8 @@ const CEFileType reg_types[] = {
     { "H",   "C/C++ Header", false, 0, 0 },
     { "HPP", "C++ Header (HPP)", false, 0, 0 },
     { "ASM", "Assembly Code", false, 0, -1 },
+    { "PAS", "Pascal Source File", false, 0, 0 },
+    { "DPR", "Delphi Source File", false, 0, 0 },
     { "DFM", "Delphi Form File", false, 1, 1 },
     { "XFM", "CLX Form File", false, 1, 1 },
     { "BPR", "Borland Project File", false, 2, -1 },
@@ -43,6 +45,8 @@ const CEFileType reg_types[] = {
     { "CLW", "MFC Class Wizard File", false, 2, -1 },
     { "DSW", "MS DevStudio Workspace", false, 2, -1 },
     { "DSP", "MS DevStudio Project File", false, 2, -1 },
+    { "DOF", "Delphi Project Settings File", false, 2, -1 },
+    { "CFG", "Delphi Compiler Configuration", false, 2, -1 },
     { "RES", "Resource file (binary)", true, 2, -1 },
 };
 
